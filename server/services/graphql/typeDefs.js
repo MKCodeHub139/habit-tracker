@@ -2,8 +2,8 @@ const typeDefs =`
 scalar Date
 type User{
     id:ID!
-    name:String
-    email:String
+    name:String!
+    email:String!
 }
 type Habit{
     id:ID!
@@ -35,17 +35,17 @@ input CreateHabitInput {
     selectedDays: [String]
     completedDates: [Date]
 }
-input loginUserInput{
+input LoginUserInput{
     email:String!
     password:String!
 }
 type AuthPayload{
-    token:String!
+    token:String
 }
 type Mutation {
-    createUser(input: CreateUserInput!): User
+        createUser(input: CreateUserInput!): User
     createHabit(input: CreateHabitInput!): Habit
-    loginUser(input:loginUserInput!):AuthPayload
+    loginUser(input:LoginUserInput!):AuthPayload
 }
 
 `

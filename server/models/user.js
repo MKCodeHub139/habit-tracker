@@ -1,5 +1,5 @@
 import {Schema,model} from 'mongoose'
-import {createHmac} from 'crypto'
+import {createHmac, randomBytes} from 'crypto'
 import { createToken } from '../services/jwt/auth.js'
 const userSchema =new Schema({
     name:{
@@ -14,7 +14,6 @@ const userSchema =new Schema({
     },
     salt:{
         type:String,
-        required:true,
     },
     password:{
         type:String,

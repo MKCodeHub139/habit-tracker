@@ -19,14 +19,15 @@ const resolvers ={
     },
     Mutation:{
         createUser:async(parent,args)=>{
-            const {name,email,password} =args
+            const {name,email,password} =args.input
+            console.log(name,email,password)
             const createUser = await User.create({
-                name,email,salt,password
+                name,email,password
             })
             return createUser
         },
         loginUser:async(parent,args,context)=>{
-            const {email,password} =args
+            const {email,password} =args.input
             const {res} =context
             const token = await User.matchPassordAndValidateToken(email,password)
              res.cookie('token',token)
