@@ -16,5 +16,24 @@ token
 }
 }
 `
-
-export {CreateUser,LoginUser}
+const CreateHabit= gql`
+mutation createHabit($input:CreateHabitInput!){
+createHabit(input:$input){
+     userId
+    title
+    category
+    frequency
+    selectedDays
+    completedDates
+}
+}`
+const UpdateCompleteDates =gql`
+mutation updateCompleteDates($input:updateCompleteDatesInput!){
+updateCompleteDates(input:$input){
+    id 
+    userId
+    completedDates
+}
+}
+`
+export {CreateUser,LoginUser,CreateHabit,UpdateCompleteDates}

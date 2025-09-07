@@ -12,7 +12,8 @@ const Login = () => {
     const response =await Login_User({variables:{
      input:{ 
       email,
-      password}
+      password
+    }
     }})
     if(response){
         navigate('/')

@@ -1,3 +1,4 @@
+import mongoose from "mongoose"
 import Habit from "../../models/habit.js"
 import User from "../../models/user.js"
 
@@ -10,8 +11,9 @@ const resolvers ={
             }
         },
         getHabits:async(parent,{userId})=>{
-            const habits=await Habit.findById(userId)
+            const habits=await Habit.find({userId:new mongoose.Types.ObjectId(userId)})
             if(habits){
+
                 return habits
             }
         },
@@ -33,9 +35,9 @@ const resolvers ={
              res.cookie('token',token)
               return true
         },
-        createHabit:async(parent,args)=>{
+        createHabit:async(parent,args,context)=>{
             const {user} =context
-            const {title,category,frequency,selectedDays} =args
+            const {title,category,frequency,selectedDays} =args.input
             const createHabit = await Habit.create({
                 userId:user.id,
                 title,
@@ -46,6 +48,18 @@ const resolvers ={
             })
             return createHabit
         },
+        updateCompleteDates:async(parent,args,context)=>{
+           const {user} =context
+            const {completedDates,id} =args.input
+            console.log(completedDates,id)
+            const habit = await Habit.findById(id);
+            const updatedCompletedDates = [...habit.completedDates, completedDates];
+        //    const updateHabit =await Habit.findByIdAndUpdate(id,{
+        //     completedDates:updatedCompletedDates
+        //    },{new:true})
+        //    return updateHabit
+
+        }
 
     }
 

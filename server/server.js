@@ -27,7 +27,7 @@ app.use('/graphql',express.json(),expressMiddleware(server,{
        let token =null
       const isIntrospection = req.body?.operationName === 'IntrospectionQuery';
     if (isIntrospection) return { req, res };
-    token =req.cookies.token
+    token =req?.cookies?.token
     if(token){
         const user = await validateUser(token)
         if(!user) throw new Error('user not exists')

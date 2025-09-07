@@ -9,11 +9,11 @@ type Habit{
     id:ID!
     userId:ID!
     user:User
-    title:String
-    category:String
-    frequency:String
+    title:String!
+    category:String!
+    frequency:String!
     streak:Int
-    selectedDays:[String]
+    selectedDays:[String]!
     completedDates:[Date]
     }
 
@@ -28,10 +28,9 @@ input CreateUserInput {
 }
 
 input CreateHabitInput {
-    userId: ID!
     title: String!
-    category: String
-    frequency: String
+    category: String!
+    frequency: String!
     selectedDays: [String]
     completedDates: [Date]
 }
@@ -39,13 +38,19 @@ input LoginUserInput{
     email:String!
     password:String!
 }
+    input updateCompleteDatesInput{
+        id:ID!
+        completedDates:[Date]
+
+    }
 type AuthPayload{
     token:String
 }
 type Mutation {
-        createUser(input: CreateUserInput!): User
+    createUser(input: CreateUserInput!): User
     createHabit(input: CreateHabitInput!): Habit
     loginUser(input:LoginUserInput!):AuthPayload
+    updateCompleteDates(input:updateCompleteDatesInput!): Habit
 }
 
 `

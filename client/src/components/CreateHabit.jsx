@@ -1,10 +1,20 @@
 import React, { useRef, useState } from "react";
+import {useMutation} from '@apollo/client/react';
+import { CreateHabit as createHabit } from "../graphql/mutations";
 
 const CreateHabit = () => {
   const [selectDayDropdown, setSelectDayDropdown] = useState(false);
   const [selectDay,setSelectDay] =useState([])
-  const [formData ,setFormaData] =useState({})
+  const [formData ,setFormaData] =useState({
+    title:'',
+    category:'',
+    frequency:"Daily",
+    selectDay:[]
+  })
+  const [Create_Habit]=useMutation(createHabit)
   const dropdown = useRef();
+  const selectDaysCheck = document.querySelectorAll('.dropown-content ul li input')
+  
   const handleDropdown = (e) => {
     e.preventDefault();
     setSelectDayDropdown(!selectDayDropdown);
@@ -20,9 +30,19 @@ const CreateHabit = () => {
     setSelectDay(newSelect)
     setFormaData((prev)=>({...prev,selectDay:newSelect}))
 }
-const handleCreateHabit=(e)=>{
+const handleCreateHabit=async(e)=>{
     e.preventDefault()
-    console.log(formData)
+    const response =await Create_Habit({variables:{
+      input:{
+        title:formData.title,
+        category:formData.category,
+        frequency:formData.frequency,
+        selectedDays:formData.selectDay
+      }
+      
+    
+    }})
+      console.log(response)
 }
 
   return (
@@ -31,7 +51,7 @@ const handleCreateHabit=(e)=>{
       <form
         action=""
         onSubmit={handleCreateHabit}
-        className="flex flex-col gap-4 bg-fuchsia-400 my-9 w-1/2 p-9 shadow-2xl rounded-xl"
+        className="flex flex-col gap-4 bg-fuchsia-400 my-9 lg:w-1/2 p-9 shadow-2xl rounded-xl"
       >
         <label htmlFor="" className="">
           Title
@@ -57,8 +77,8 @@ const handleCreateHabit=(e)=>{
           placeholder="enter Category..."
           className="px-2 bg-transparent border-1 rounded py-1"
         />
-        <div className="select-fields md:flex flex-wrap justify-between items-center">
-          <div className="frequency-select w-1/2 h-[2rem] flex items-center gap-3">
+        <div className="select-fields sm:flex flex-wrap justify-between items-center">
+          <div className="frequency-select w-1/2 h-[2rem] flex items-center gap-3 ">
             <label htmlFor="" className="">
               Frequency
             </label>
@@ -67,7 +87,7 @@ const handleCreateHabit=(e)=>{
               id=""
               className="bg-fuchsia-300 px-2 rounded"
               value={formData.frequency}
-              defaultValue="Daily"
+              defaultValue={(e)=>setFormaData(prev)({...prev,frequency:"Daily"})}
               onChange={(e)=>setFormaData((prev)=>({...prev,frequency:e.target.value}))}
             >
               <option value="Daily">Daily</option>
@@ -75,13 +95,14 @@ const handleCreateHabit=(e)=>{
               <option value="Custom">Custom</option>
             </select>
           </div>
-          <div className="select-day flex items-center w-1/2 h-[2rem]  gap-3 justify-end relative">
-            <label htmlFor="" className="float-end">
+          <div className="select-day flex items-center sm:w-1/2 min-h-[2rem]  gap-3 sm:justify-end relative">
+            <label htmlFor="" className="">
               Select Day
             </label>
             <button
-              className="bg-fuchsia-300 px-2 rounded cursor-pointer dropdown "
+              className="bg-fuchsia-300 px-2 rounded cursor-pointer dropdown" 
               onClick={handleDropdown}
+              disabled={formData.frequency=="Daily"}
             >
               Select--
             </button>
