@@ -36,4 +36,13 @@ updateCompleteDates(input:$input){
 }
 }
 `
-export {CreateUser,LoginUser,CreateHabit,UpdateCompleteDates}
+const UpdateStreak =gql`
+mutation updateStreak($input:updateStreakInput!){
+updateStreak(input:$input){
+id
+userId
+streak
+}
+}
+`
+export {CreateUser,LoginUser,CreateHabit,UpdateCompleteDates,UpdateStreak}

@@ -41,7 +41,10 @@ input LoginUserInput{
     input updateCompleteDatesInput{
         id:ID!
         completedDates:[Date]
-
+    }
+    input updateStreakInput{
+    id:ID!
+    streak:Int
     }
 type AuthPayload{
     token:String
@@ -51,6 +54,7 @@ type Mutation {
     createHabit(input: CreateHabitInput!): Habit
     loginUser(input:LoginUserInput!):AuthPayload
     updateCompleteDates(input:updateCompleteDatesInput!): Habit
+    updateStreak(input:updateStreakInput!): Habit
 }
 
 `

@@ -17,7 +17,6 @@ const resolvers ={
                 return habits
             }
         },
-
     },
     Mutation:{
         createUser:async(parent,args)=>{
@@ -54,14 +53,18 @@ const resolvers ={
             console.log(completedDates,id)
             const habit = await Habit.findById(id);
             const updatedCompletedDates = [...habit.completedDates, completedDates];
-        //    const updateHabit =await Habit.findByIdAndUpdate(id,{
-        //     completedDates:updatedCompletedDates
-        //    },{new:true})
-        //    return updateHabit
-
+           const updateHabit =await Habit.findByIdAndUpdate(id,{
+            completedDates:updatedCompletedDates
+           },{new:true})
+           return updateHabit
+        },
+        updateStreak:async(parent,args,context)=>{
+            const {id,streak} =args.input
+            const updateStreak =await Habit.findByIdAndUpdate(id,{
+                streak:streak
+            },{new:true})
+            return updateStreak
         }
-
     }
-
 }
 export default resolvers

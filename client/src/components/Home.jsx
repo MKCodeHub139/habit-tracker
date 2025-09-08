@@ -1,27 +1,55 @@
 import { useMutation, useQuery } from "@apollo/client/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { GetHabits } from "../graphql/queries";
-import { UpdateCompleteDates } from "../graphql/mutations";
+import { UpdateCompleteDates ,UpdateStreak} from "../graphql/mutations";
 
 const Home = () => {
   const { data, error, loading } = useQuery(GetHabits, {
     variables: { userId: "68bacc259f8fdce8e0a209b2" },
   });
   const [Update_Complete_Dates] = useMutation(UpdateCompleteDates);
+  const [Update_Streak] = useMutation(UpdateStreak);
   const today = new Date().toISOString().split("T")[0];
-  // let isCompleted;
-  const handleComplete = async (e, habit) => {
-    //  isCompleted =habit?.completedDates?.includes(today)
-    if (e.target.checked) {
-      const updateComplete=await Update_Complete_Dates({variables:{
-        input:{
-          id:habit.id,
-          completedDates:today
-        }
-      }})
+  let streak=[]
+  let longest_streak =0;
+    let habitId;
+  data?.getHabits?.forEach((habit)=>{
+   habitId =habit.id  
+    habit?.completedDates?.forEach((date)=>{
+      const currentDate = new Date(date.split('T')[0]) 
+      let lastDate=streak.length ?new Date(streak[streak.length-1]):null
+      if (!lastDate || (currentDate - lastDate === 86400000)) {
+      streak.push(date.split('T')[0]);
+      if(streak.length >= longest_streak) {
+      longest_streak =streak.length
+      } 
+   } else {
+      streak = [date.split('T')[0]];
     }
-   
+    })
+  })
+  console.log(longest_streak)
+  useEffect(()=>{
+    Update_Streak({variables:{
+      input:{
+        id:habitId,
+        streak:Number(streak.length),
+      }
+    }})
+  },[streak])
+  const handleComplete = async (e, habit) => {
+    if (e.target.checked) {
+      const updateComplete = await Update_Complete_Dates({
+        variables: {
+          input: {
+            id: habit.id,
+            completedDates: today,
+          },
+        },
+      });
+    }
   };
+
   if (loading) return <h1>Loading</h1>;
   return (
     <div className="min-h-screen py-[4rem]">
@@ -38,18 +66,19 @@ const Home = () => {
           <div className="category w-full">
             <h3 className="text-xl text-base-100">Study</h3>
           </div>
-          {data.getHabits?.map((habit) => {
+          {data?.getHabits?.map((habit) => {
             return (
               <div className="habit-card w-1/3 bg-fuchsia-400 text-white min-h-[10rem] rounded shadow-xl p-3 grow">
                 <div className="title flex justify-between items-center w-[70%]">
                   <h5 className="text-[1.2rem] font-bold">{habit.title}</h5>
-                  <div className="achive-check flex flex-col">
+                  <div className="achive-check flex flex-col items-center">
                     <label htmlFor="">Acheive</label>
                     <input
                       type="checkbox"
-                      className='"w-4 h-4 accent-fuchsia-500'
-                      onChange={(e)=>handleComplete(e,habit)}
-                      // disabled={isCompleted}
+                      className={`w-4 h-4 accent-fuchsia-500`}
+                      onChange={(e) => handleComplete(e, habit)}
+                      disabled={habit?.completedDates?.some((date)=> new Date(date).toISOString().split('T')[0] ===today)}
+                      checked={habit?.completedDates?.some((date)=> new Date(date).toISOString().split('T')[0] ===today)}
                     />
                   </div>
                 </div>
@@ -60,7 +89,7 @@ const Home = () => {
                   <p>Streak 🔥 : {habit.streak}</p>
                 </div>
                 <div className="longest-streak">
-                  <p>longest Streak 🔥 : 0 </p>
+                  <p>longest Streak 🔥 : {longest_streak} </p>
                 </div>
                 <div className="action-btns flex gap-9 items-center mt-4 ">
                   <button className="bg-base-200 text-black hover:bg-base-300 px-5 cursor-pointer rounded">
