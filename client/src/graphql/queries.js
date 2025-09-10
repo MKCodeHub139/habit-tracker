@@ -9,6 +9,7 @@ query GetHabits($userId: ID!) {
     id
     selectedDays
     streak
+    longestStreak
     title
     user {
       email

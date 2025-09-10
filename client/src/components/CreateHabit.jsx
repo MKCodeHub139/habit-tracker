@@ -13,8 +13,6 @@ const CreateHabit = () => {
   })
   const [Create_Habit]=useMutation(createHabit)
   const dropdown = useRef();
-  const selectDaysCheck = document.querySelectorAll('.dropown-content ul li input')
-  
   const handleDropdown = (e) => {
     e.preventDefault();
     setSelectDayDropdown(!selectDayDropdown);

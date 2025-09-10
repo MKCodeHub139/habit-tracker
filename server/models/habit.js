@@ -22,6 +22,10 @@ const habitSchema =new Schema({
         type:Number,
         default:0
     },
+    longestStreak:{
+        type:Number,
+        default:0
+    },
     selectedDays:{
         type:[String],
         required:true,

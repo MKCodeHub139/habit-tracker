@@ -13,8 +13,10 @@ type Habit{
     category:String!
     frequency:String!
     streak:Int
+    longestStreak:Int
     selectedDays:[String]!
     completedDates:[Date]
+
     }
 
 type Query{
@@ -45,6 +47,7 @@ input LoginUserInput{
     input updateStreakInput{
     id:ID!
     streak:Int
+    longestStreak:Int
     }
 type AuthPayload{
     token:String
@@ -55,6 +58,7 @@ type Mutation {
     loginUser(input:LoginUserInput!):AuthPayload
     updateCompleteDates(input:updateCompleteDatesInput!): Habit
     updateStreak(input:updateStreakInput!): Habit
+    deleteHabit(id:ID!): Habit
 }
 
 `

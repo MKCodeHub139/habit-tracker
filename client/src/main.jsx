@@ -27,11 +27,11 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  // <StrictMode>
     <ApolloProvider client={client}>
       <RouterProvider router={router}>
     <App/>
       </RouterProvider>
     </ApolloProvider>
-  </StrictMode>,
+  // </StrictMode>,
 )

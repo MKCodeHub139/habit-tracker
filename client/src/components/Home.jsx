@@ -1,42 +1,59 @@
 import { useMutation, useQuery } from "@apollo/client/react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { GetHabits } from "../graphql/queries";
-import { UpdateCompleteDates ,UpdateStreak} from "../graphql/mutations";
+import {
+  UpdateCompleteDates,
+  UpdateStreak,
+  DeleteHabit,
+} from "../graphql/mutations";
 
 const Home = () => {
   const { data, error, loading } = useQuery(GetHabits, {
     variables: { userId: "68bacc259f8fdce8e0a209b2" },
   });
+  let allHabitStreaks = {};
   const [Update_Complete_Dates] = useMutation(UpdateCompleteDates);
   const [Update_Streak] = useMutation(UpdateStreak);
+  const [Delete_Habit] = useMutation(DeleteHabit);
   const today = new Date().toISOString().split("T")[0];
-  let streak=[]
-  let longest_streak =0;
-    let habitId;
-  data?.getHabits?.forEach((habit)=>{
-   habitId =habit.id  
-    habit?.completedDates?.forEach((date)=>{
-      const currentDate = new Date(date.split('T')[0]) 
-      let lastDate=streak.length ?new Date(streak[streak.length-1]):null
-      if (!lastDate || (currentDate - lastDate === 86400000)) {
-      streak.push(date.split('T')[0]);
-      if(streak.length >= longest_streak) {
-      longest_streak =streak.length
-      } 
-   } else {
-      streak = [date.split('T')[0]];
-    }
-    })
-  })
-  console.log(longest_streak)
-  useEffect(()=>{
-    Update_Streak({variables:{
-      input:{
-        id:habitId,
-        streak:Number(streak.length),
+  // streak logic
+
+  useEffect(() => {
+    data?.getHabits.map((habit) => {
+      let streak = 0;
+      let longestStreak = 0;
+      let prev;
+
+      habit?.completedDates.map((date) => {
+        const currentDate = new Date(date.split("T")[0]);
+        if (
+          (currentDate - prev <= 86400000 && currentDate - prev > 0) ||
+          prev == undefined
+        ) {
+          streak += 1;
+          prev = currentDate;
+        } else {
+          prev = currentDate;
+          streak = 0;
+        }
+      if(streak > longestStreak){
+        longestStreak =streak
       }
-    }})
-  },[streak])
+
+      });
+      if (habit.id && streak > 0) {
+        Update_Streak({
+          variables: {
+            input: {
+              id: habit.id,
+              streak: Number(streak),
+              longestStreak:Number(longestStreak)
+            },
+          },
+        });
+      }
+    });
+  }, [data]);
   const handleComplete = async (e, habit) => {
     if (e.target.checked) {
       const updateComplete = await Update_Complete_Dates({
@@ -49,7 +66,24 @@ const Home = () => {
       });
     }
   };
-
+  // delete Habit
+  const handleDelete = async (e, id) => {
+    e.preventDefault();
+    const deleteHabit = await Delete_Habit({
+      variables: {
+        id,
+      },
+    });
+    return deleteHabit;
+  };
+  // day by sorting
+  // const handleShowWeekly =(e)=>{
+  //   e.preventDefault()
+  //   const weeklyHabit=data?.getHabits?.filter((habit)=>{
+  //       return habit.frequency =="weekly"
+  //   })
+  //   console.log(weeklyHabit)
+  // }
   if (loading) return <h1>Loading</h1>;
   return (
     <div className="min-h-screen py-[4rem]">
@@ -58,9 +92,9 @@ const Home = () => {
           <button className="cursor-pointer bg-fuchsia-400 text-base-100 hover:bg-fuchsia-300 py-1 px-5 rounded">
             Today
           </button>
-          <button className="cursor-pointer bg-fuchsia-400 text-base-100 hover:bg-fuchsia-300 py-1 px-5 rounded">
+          {/* <button className="cursor-pointer bg-fuchsia-400 text-base-100 hover:bg-fuchsia-300 py-1 px-5 rounded" onClick={handleShowWeekly}>
             Weekly
-          </button>
+          </button> */}
         </div>
         <div className="habits flex flex-wrap gap-5 my-11">
           <div className="category w-full">
@@ -77,8 +111,14 @@ const Home = () => {
                       type="checkbox"
                       className={`w-4 h-4 accent-fuchsia-500`}
                       onChange={(e) => handleComplete(e, habit)}
-                      disabled={habit?.completedDates?.some((date)=> new Date(date).toISOString().split('T')[0] ===today)}
-                      checked={habit?.completedDates?.some((date)=> new Date(date).toISOString().split('T')[0] ===today)}
+                      disabled={habit?.completedDates?.some(
+                        (date) =>
+                          new Date(date).toISOString().split("T")[0] === today
+                      )}
+                      checked={habit?.completedDates?.some(
+                        (date) =>
+                          new Date(date).toISOString().split("T")[0] === today
+                      )}
                     />
                   </div>
                 </div>
@@ -89,13 +129,16 @@ const Home = () => {
                   <p>Streak 🔥 : {habit.streak}</p>
                 </div>
                 <div className="longest-streak">
-                  <p>longest Streak 🔥 : {longest_streak} </p>
+                  <p>longest Streak 🔥 : {habit.longestStreak} </p>
                 </div>
                 <div className="action-btns flex gap-9 items-center mt-4 ">
                   <button className="bg-base-200 text-black hover:bg-base-300 px-5 cursor-pointer rounded">
                     View
                   </button>
-                  <button className="bg-base-200 text-black hover:bg-base-400 px-5 cursor-pointer rounded">
+                  <button
+                    className="bg-base-200 text-black hover:bg-base-400 px-5 cursor-pointer rounded"
+                    onClick={(e) => handleDelete(e, habit.id)}
+                  >
                     Delete
                   </button>
                 </div>

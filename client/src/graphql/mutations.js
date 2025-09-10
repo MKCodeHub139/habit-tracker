@@ -42,7 +42,16 @@ updateStreak(input:$input){
 id
 userId
 streak
+longestStreak
 }
 }
 `
-export {CreateUser,LoginUser,CreateHabit,UpdateCompleteDates,UpdateStreak}
+const DeleteHabit =gql`
+mutation deleteHabit($id:ID!){
+deleteHabit(id:$id){
+id
+userId
+}
+}
+`
+export {CreateUser,LoginUser,CreateHabit,UpdateCompleteDates,UpdateStreak,DeleteHabit}

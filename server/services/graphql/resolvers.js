@@ -59,11 +59,19 @@ const resolvers ={
            return updateHabit
         },
         updateStreak:async(parent,args,context)=>{
-            const {id,streak} =args.input
+            const {id,streak,longestStreak} =args.input
             const updateStreak =await Habit.findByIdAndUpdate(id,{
-                streak:streak
+                streak:streak,
+                longestStreak:longestStreak
             },{new:true})
             return updateStreak
+        },
+        deleteHabit:async(parent,args,context)=>{
+            const {id}=args
+            if(id){
+                const deleteHabit =await Habit.findByIdAndDelete(id,{new:true})
+                return deleteHabit
+            }
         }
     }
 }
