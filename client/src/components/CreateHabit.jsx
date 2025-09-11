@@ -27,7 +27,7 @@ const CreateHabit = () => {
     }
     setSelectDay(newSelect)
     setFormaData((prev)=>({...prev,selectDay:newSelect}))
-}
+  }
 const handleCreateHabit=async(e)=>{
     e.preventDefault()
     const response =await Create_Habit({variables:{

@@ -6,12 +6,12 @@ import {
   UpdateStreak,
   DeleteHabit,
 } from "../graphql/mutations";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const { data, error, loading } = useQuery(GetHabits, {
     variables: { userId: "68bacc259f8fdce8e0a209b2" },
   });
-  let allHabitStreaks = {};
   const [Update_Complete_Dates] = useMutation(UpdateCompleteDates);
   const [Update_Streak] = useMutation(UpdateStreak);
   const [Delete_Habit] = useMutation(DeleteHabit);
@@ -19,41 +19,46 @@ const Home = () => {
   // streak logic
 
   useEffect(() => {
-    data?.getHabits.map((habit) => {
-      let streak = 0;
-      let longestStreak = 0;
-      let prev;
+    if (!data?.getHabits) return;
 
-      habit?.completedDates.map((date) => {
-        const currentDate = new Date(date.split("T")[0]);
-        if (
-          (currentDate - prev <= 86400000 && currentDate - prev > 0) ||
-          prev == undefined
-        ) {
+    data.getHabits.forEach((habit) => {
+      if (!habit?.completedDates?.length) return;
+
+      const sortedDates = habit.completedDates
+        .map((d) => new Date(d.split("T")[0]))
+        .sort((a, b) => a - b);
+
+      let streak = 1;
+      let longestStreak = 1;
+
+      for (let i = 1; i < sortedDates.length; i++) {
+        const diff = sortedDates[i] - sortedDates[i - 1];
+
+        if (diff === 86400000) {
           streak += 1;
-          prev = currentDate;
+        } else if (diff > 86400000) {
+          streak = 1;
         } else {
-          prev = currentDate;
-          streak = 0;
+          continue;
         }
-      if(streak > longestStreak){
-        longestStreak =streak
+
+        if (streak > longestStreak) {
+          longestStreak = streak;
+        }
       }
 
-      });
-      if (habit.id && streak > 0) {
-        Update_Streak({
-          variables: {
-            input: {
-              id: habit.id,
-              streak: Number(streak),
-              longestStreak:Number(longestStreak)
-            },
+      Update_Streak({
+        variables: {
+          input: {
+            id: habit.id,
+            streak,
+            longestStreak,
           },
-        });
-      }
+        },
+      });
     });
   }, [data]);
+
   const handleComplete = async (e, habit) => {
     if (e.target.checked) {
       const updateComplete = await Update_Complete_Dates({
@@ -132,9 +137,12 @@ const Home = () => {
                   <p>longest Streak 🔥 : {habit.longestStreak} </p>
                 </div>
                 <div className="action-btns flex gap-9 items-center mt-4 ">
-                  <button className="bg-base-200 text-black hover:bg-base-300 px-5 cursor-pointer rounded">
+                  <Link
+                    to={`/habit?habitId=${habit.id}`}
+                    className="bg-base-200 text-black hover:bg-base-300 px-5 cursor-pointer rounded"
+                  >
                     View
-                  </button>
+                  </Link>
                   <button
                     className="bg-base-200 text-black hover:bg-base-400 px-5 cursor-pointer rounded"
                     onClick={(e) => handleDelete(e, habit.id)}

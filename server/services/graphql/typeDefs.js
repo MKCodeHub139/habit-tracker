@@ -22,6 +22,7 @@ type Habit{
 type Query{
     getUser:[User]
     getHabits(userId:ID!):[Habit]
+    getHabit(id:ID!):Habit
 }
 input CreateUserInput {
     name: String!

@@ -20,5 +20,25 @@ query GetHabits($userId: ID!) {
   }
 }
 `
+const GetHabit =gql`
+query getHabit($id: ID!) {
+  getHabit(id: $id) {
+    category
+    completedDates
+    frequency
+    id
+    selectedDays
+    streak
+    longestStreak
+    title
+    user {
+      email
+      id
+      name
+    }
+    userId
+  }
+}
+`
 
-export {GetHabits}
+export {GetHabits,GetHabit}

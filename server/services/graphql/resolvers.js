@@ -17,6 +17,12 @@ const resolvers ={
                 return habits
             }
         },
+        getHabit:async(parent,{id})=>{
+            const habit=await Habit.findById(id)
+            if(habit){
+                return habit
+            }
+        },
     },
     Mutation:{
         createUser:async(parent,args)=>{
