@@ -97,9 +97,12 @@ const Home = () => {
           <button className="cursor-pointer bg-fuchsia-400 text-base-100 hover:bg-fuchsia-300 py-1 px-5 rounded">
             Today
           </button>
-          {/* <button className="cursor-pointer bg-fuchsia-400 text-base-100 hover:bg-fuchsia-300 py-1 px-5 rounded" onClick={handleShowWeekly}>
+          <button className="cursor-pointer bg-fuchsia-400 text-base-100 hover:bg-fuchsia-300 py-1 px-5 rounded" /*onClick={handleShowWeekly}*/>
             Weekly
-          </button> */}
+          </button>
+          <Link to="/analytics" className="cursor-pointer bg-fuchsia-400 text-base-100 hover:bg-fuchsia-300 py-1 px-5 rounded">
+            OverAll
+          </Link>
         </div>
         <div className="habits flex flex-wrap gap-5 my-11">
           <div className="category w-full">

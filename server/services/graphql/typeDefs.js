@@ -37,6 +37,13 @@ input CreateHabitInput {
     selectedDays: [String]
     completedDates: [Date]
 }
+input EditHabitInput {
+    id:ID!
+    title: String!
+    category: String!
+    frequency: String!
+    selectedDays: [String]
+}
 input LoginUserInput{
     email:String!
     password:String!
@@ -60,6 +67,7 @@ type Mutation {
     updateCompleteDates(input:updateCompleteDatesInput!): Habit
     updateStreak(input:updateStreakInput!): Habit
     deleteHabit(id:ID!): Habit
+    editHabit(input:EditHabitInput!): Habit
 }
 
 `

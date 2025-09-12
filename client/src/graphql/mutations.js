@@ -49,9 +49,21 @@ longestStreak
 const DeleteHabit =gql`
 mutation deleteHabit($id:ID!){
 deleteHabit(id:$id){
-id
-userId
+    id
+    userId
 }
 }
 `
-export {CreateUser,LoginUser,CreateHabit,UpdateCompleteDates,UpdateStreak,DeleteHabit}
+const EditHabit =gql`
+mutation editHabit($input:EditHabitInput!){
+editHabit(input:$input){
+    id
+    userId
+    title
+    category
+    frequency
+    selectedDays
+}
+}
+`
+export {CreateUser,LoginUser,CreateHabit,UpdateCompleteDates,UpdateStreak,DeleteHabit,EditHabit}

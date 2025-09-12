@@ -1,51 +1,80 @@
-import React, { useRef, useState } from "react";
-import {useMutation} from '@apollo/client/react';
-import { CreateHabit as createHabit } from "../graphql/mutations";
+import React, { useEffect, useRef, useState } from 'react'
+import {GetHabit} from '../graphql/queries'
+import { useMutation, useQuery } from '@apollo/client/react';
+import { useSearchParams } from 'react-router-dom';
+import { EditHabit as UpdateHabit } from '../graphql/mutations';
 
-const CreateHabit = () => {
-  const [selectDayDropdown, setSelectDayDropdown] = useState(false);
-  const [selectDay,setSelectDay] =useState([])
-  const [formData ,setFormaData] =useState({
-    title:'',
-    category:'',
-    frequency:"Daily",
-    selectDay:[]
-  })
-  const [Create_Habit]=useMutation(createHabit)
-  const dropdown = useRef();
-  const handleDropdown = (e) => {
+const EditHabit = () => {
+    const [serachParam] =useSearchParams()
+    const editId =serachParam.get('habitId')
+    const [Edit_Habit] =useMutation(UpdateHabit)
+      const [selectDayDropdown, setSelectDayDropdown] = useState(false);
+        const [selectDay,setSelectDay] =useState([])
+      
+        const {data, error, loading} = useQuery(GetHabit,{
+            variables:{id:editId}
+        })
+       const [formData, setFormData] = useState({
+    title: '',
+    category: '',
+    frequency: 'Daily',
+    selectDay: [],
+  });
+
+  useEffect(() => {
+    if (data?.getHabit) {
+      setFormData({
+        title: data.getHabit.title || '',
+        category: data.getHabit.category || '',
+        frequency: data.getHabit.frequency || 'Daily',
+        selectDay: data.getHabit.selectedDays || [],
+      });
+    }
+  }, [data]);
+    const dropdown = useRef();
+    const handleDropdown = (e) => {
     e.preventDefault();
     setSelectDayDropdown(!selectDayDropdown);
   };
-  const handleDropdownCheck=(e)=>{
-    let newSelect;
-    if(e.target.checked){
-     newSelect= [...selectDay,e.target.value]
-    }
-    else{
-        newSelect=selectDay.filter((item)=>item !==e.target.value)
-    }
-    setSelectDay(newSelect)
-    setFormaData((prev)=>({...prev,selectDay:newSelect}))
-  }
-const handleCreateHabit=async(e)=>{
+   const handleCheckboxChange = (day) => {
+    setFormData(prev => {
+      const selected = prev.selectDay.includes(day);
+      const updatedDays = selected 
+        ? prev.selectDay.filter(d => d !== day) 
+        : [...prev.selectDay, day];
+      return { ...prev, selectDay: updatedDays };
+    });
+  };
+//     const handleDropdownCheck=(e)=>{
+//     let newSelect;
+
+//     if(e.target.checked){
+//      newSelect= [...selectDay,,e.target.value]
+//     }
+//     else{
+//         newSelect=selectDay.filter((item)=>item !==e.target.value)
+//     }
+//     setSelectDay(newSelect)
+//     setFormData((prev)=>({...prev,selectDay:newSelect}))
+//   }
+  console.log(data)
+    const handleCreateHabit=async(e)=>{
     e.preventDefault()
-    const response =await Create_Habit({variables:{
+    const response =await Edit_Habit({variables:{
       input:{
+        id:editId,
         title:formData.title,
         category:formData.category,
         frequency:formData.frequency,
         selectedDays:formData.selectDay
       }
-      
-    
     }})
       console.log(response)
 }
-
+if(loading) return <h2>Loading...</h2> 
   return (
-    <div className="container mx-auto py-[3rem]">
-      <h2 className="text-2xl text-base-100">Make Your Habit</h2>
+         <div className="container mx-auto py-[3rem]">
+      <h2 className="text-2xl text-base-100">Update Your Habit</h2>
       <form
         action=""
         onSubmit={handleCreateHabit}
@@ -59,7 +88,7 @@ const handleCreateHabit=async(e)=>{
           name=""
           id=""
           value={formData.title}
-          onChange={(e)=>setFormaData((prev)=>({...prev,title:e.target.value}))}
+          onChange={(e)=>setFormData((prev)=>({...prev,title:e.target.value}))}
           placeholder="enter title..."
           className="px-2 bg-transparent border-1 rounded py-1"
         />
@@ -71,7 +100,7 @@ const handleCreateHabit=async(e)=>{
           name=""
           id=""
            value={formData.category}
-          onChange={(e)=>setFormaData((prev)=>({...prev,category:e.target.value}))}
+          onChange={(e)=>setFormData((prev)=>({...prev,category:e.target.value}))}
           placeholder="enter Category..."
           className="px-2 bg-transparent border-1 rounded py-1"
         />
@@ -85,8 +114,8 @@ const handleCreateHabit=async(e)=>{
               id=""
               className="bg-fuchsia-300 px-2 rounded"
               value={formData.frequency}
-              defaultValue={(e)=>setFormaData(prev)({...prev,frequency:"Daily"})}
-              onChange={(e)=>setFormaData((prev)=>({...prev,frequency:e.target.value}))}
+              defaultValue={(e)=>setFormData(prev)({...prev,frequency:"Daily"})}
+              onChange={(e)=>setFormData((prev)=>({...prev,frequency:e.target.value}))}
             >
               <option value="Daily">Daily</option>
               <option value="Weekly">Weekly</option>
@@ -110,13 +139,15 @@ const handleCreateHabit=async(e)=>{
               } absolute  bg-base-100 right-0 top-[30px] w-[15vw] h-[30vh] overflow-auto`}
               ref={dropdown}
             >
-              <ul onChange={handleDropdownCheck}>
+              <ul>
                 {['Sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'].map((day) => (
-                <li className="flex gap-5 py-1 hover:bg-fuchsia-300 px-3" key={day}>
-                  <input type="checkbox" name="" id="" value={day} 
-                  />
+                <li className="flex gap-5 py-1 hover:bg-fuchsia-300 px-3">
+                  <input type="checkbox" name="" id="" value={day}
+                  checked={formData.selectDay.includes(day)}
+                  onChange={() => handleCheckboxChange(day)}/>
                   <label htmlFor="">{day}</label>
                 </li>
+               
                 ))}
               </ul>
             </div>
@@ -127,7 +158,7 @@ const handleCreateHabit=async(e)=>{
         </button>
       </form>
     </div>
-  );
-};
+  )
+}
 
-export default CreateHabit;
+export default EditHabit

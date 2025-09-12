@@ -53,6 +53,21 @@ const resolvers ={
             })
             return createHabit
         },
+        editHabit:async(parent,args,context)=>{
+            const {user} =context
+            const {id,title,category,frequency,selectedDays,completedDates} =args.input
+            console.log(id,title,category,frequency,selectedDays,completedDates)
+            const editHabit = await Habit.findByIdAndUpdate(id,{
+                $set:{
+                    title,
+                    category,
+                    frequency,
+                    selectedDays,
+                }
+            },{new:true})
+            
+            return editHabit
+        },
         updateCompleteDates:async(parent,args,context)=>{
            const {user} =context
             const {completedDates,id} =args.input

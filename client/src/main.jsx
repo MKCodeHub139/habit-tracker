@@ -10,6 +10,8 @@ import Login from './components/Login.jsx';
 import Home from './components/Home.jsx';
 import CreateHabit from './components/CreateHabit.jsx';
 import ViewHabit from './components/ViewHabit.jsx';
+import EditHabit from './components/EditHabit.jsx';
+import Analytics from './components/Analytics.jsx';
 
 const router=createBrowserRouter(
   createRoutesFromElements(
@@ -19,6 +21,8 @@ const router=createBrowserRouter(
       <Route path='/signup' element={<Signup/>}/>
       <Route path='/create' element={<CreateHabit/>}/>
       <Route path='/habit' element={<ViewHabit/>}/>
+      <Route path='/edit-habit' element={<EditHabit/>}/>
+      <Route path='/analytics' element={<Analytics/>}/>
     </Route>
   )
 )
