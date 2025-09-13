@@ -1,6 +1,12 @@
 import React from "react";
-
+import HeaderCard from "./Analytics components/HeaderCard";
+import useAllHabits from "../hooks/analytics/headerCards/useAllHabits";
+import useOverallCompletion from "../hooks/analytics/headerCards/useOverallCompletion";
 const Analytics = () => {
+  const {habits, isLoading, isError} = useAllHabits()
+  const {thisMonthOverallCompletion, diff} =useOverallCompletion(habits)
+
+
   return (
     <div className="min-h-screen py-[3rem]">
       <div className="container mx-auto ">
@@ -8,33 +14,15 @@ const Analytics = () => {
         <hr className="mt-5 text-white" />
         <div className="header">
             <div className="header-cards w-full flex flex-wrap gap-3">
-                <div className="overallCompletion-card border-2 hover:border-fuchsia-600 cursor-pointer  border-fuchsia-400 p-3 rounded-2xl my-5 min-w-1/5  grow min-h-[150px] text-white">
-                    <p className="pb-5">Overall Completion</p>
-                    <h2 className="font-extrabold text-2xl">70%</h2>
-                    <p className="text-[14px] opacity-75">+5 from last month</p>
-                    <div className="progress-line bg-gray-300 h-3 flex items-center rounded mt-3">
-                    <input type="range" name="" id=""  className="appearance-none"/>
-                    </div>
-                </div>
-                <div className="currentStreak-card border-2 hover:border-fuchsia-600 cursor-pointer border-fuchsia-400 p-3 rounded-2xl my-5 min-w-1/5  grow min-h-[150px] text-white">
-                    <p className="pb-5">Current Streak</p>
-                    <h2 className="font-extrabold text-2xl">12 days</h2>
-                    <p className="text-[14px] opacity-75">Personal best: 18 days</p>
-                </div>
-                <div className="activeHabits-card border-2 hover:border-fuchsia-600 cursor-pointer border-fuchsia-400 p-3 rounded-2xl my-5 min-w-1/5  grow min-h-[150px] text-white">
-                    <p className="pb-5">Active Habits</p>
-                    <h2 className="font-extrabold text-2xl">5</h2>
-                    <p className="text-[14px] opacity-75">2 new this month</p>
-                </div>
-                <div className="thisWeek-card border-2 hover:border-fuchsia-600 cursor-pointer border-fuchsia-400 p-3 rounded-2xl my-5 min-w-1/5  grow min-h-[150px] text-white">
-                    <p className="pb-5">This Week</p>
-                    <h2 className="font-extrabold text-2xl">32/35</h2>
-                    <p className="text-[14px] opacity-75">91% completion rate</p>
-                </div>
+                <HeaderCard title="Overall Completion" value={`${thisMonthOverallCompletion}%`} subtitle={`${diff} from last month`} progress={thisMonthOverallCompletion}/>
+                <HeaderCard title="Current Streak" value={`${12} days`} subtitle={`Personal best: 18 days`}/>
+                <HeaderCard title="Active Habits" value={`5`} subtitle={`2 new this month`}/>
+                <HeaderCard title="This Week" value={`32/35`} subtitle={`91% completion rate`}/>
+         
             </div>
 
         </div>
-        <div className="habit-actions w-2/5 bg-fuchsia-400 h-8 rounded-full flex justify-around items-center text-white my-5">
+        <div className="habit-actions md:w-2/3 lg:w-2/5 sm:w-2/3 bg-fuchsia-400 h-8 rounded-full flex justify-around items-center text-white my-5">
             <button className="bg-fuchsia-500 px-2 rounded-full hover:bg-fuchsia-300 cursor-pointer">Overview</button>
             <button className=" px-2 rounded-full hover:bg-fuchsia-300 cursor-pointer">Habit Performance</button>
             <button className="px-2 rounded-full hover:bg-fuchsia-300 cursor-pointer">Calender View</button>
