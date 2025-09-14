@@ -16,7 +16,7 @@ type Habit{
     longestStreak:Int
     selectedDays:[String]!
     completedDates:[Date]
-
+    createdAt:Date
     }
 
 type Query{

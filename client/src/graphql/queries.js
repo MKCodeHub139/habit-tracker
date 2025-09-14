@@ -11,6 +11,7 @@ query GetHabits($userId: ID!) {
     streak
     longestStreak
     title
+    createdAt
     user {
       email
       id
