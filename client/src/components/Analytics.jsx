@@ -5,27 +5,51 @@ import useOverallCompletion from "../hooks/analytics/headerCards/useOverallCompl
 const Analytics = () => {
   const { habits, isLoading, isError } = useAllHabits();
   const {
-    lastMonthHabit,
-    thisMonthOverallCompletion,
-    lastMonthOverallCompletion,
-    diff,
+    progress,
+    diff
   } = useOverallCompletion(habits);
-  // const today = new Date().toISOString().slice(0, 10);
-  // const sevenDaysAgo = new Date();
-  // sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
-  // const lastWeekHabits = habits?.getHabits?.filter((habit) => {
-  //   return habit.completedDates?.some((date) => {
-  //     const habitDate = new Date(date.split("T")[0]);
-  //     return (
-  //       habitDate >= sevenDaysAgo  && habitDate <= new Date()
-  //     );
-  //   });
-  // }); 
-  // const lastweek = lastWeekHabits?.reduce((sum, habit) => {
-  //   return sum + (habit.completedDates?.length || 0);
-  // },0)
-  console.log(lastweek);
-  console.log(lastWeekHabits);
+  const today = new Date().toISOString().slice(0, 10);
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
+  const lastWeekHabits = habits?.getHabits?.map((habit) => {
+    const completedThisWeek =habit.completedDates?.filter((date) => {
+      const habitDate = new Date(date.split("T")[0]);
+      return (
+        habitDate >= sevenDaysAgo  && habitDate <= new Date()
+      );
+    })
+      let status = "isCompletedThisWeek";
+      if(completedThisWeek?.length > 0){
+        status = "isCompletedThisWeek";
+      }else if(completedThisWeek?.length === 0){
+        status = "neverCompleted";
+      }
+      else{
+          status ="comletedBeforOnly"
+      }
+      return {...habit, status,completedThisWeek}
+    })
+    // console.log("lastWeekHabits",lastWeekHabits)
+const lastWeekPossibleCompletion = habits?.getHabits?.reduce((sum, habit) => {
+  let daily = 0;
+  let weekly = 0;
+
+  if (habit.frequency === "Daily") {
+    daily = 1;
+  } else if (habit.frequency === "Weekly") {
+    weekly = 1;
+  }
+
+  return sum + (daily * 7 + weekly * habit.selectedDays.length);
+}, 0);
+
+  const lastWeekCompletedHabits =lastWeekHabits?.reduce((sum,habit)=>{
+    if(habit.status === "isCompletedThisWeek"){
+      return sum + (habit.completedThisWeek?.length || 0)
+    }
+    return sum;
+},0)
+
    const { currentStreak, longestStreak } = useMemo(() => {
     let currentStreak = 0;
     let longestStreak = 0;
@@ -56,9 +80,9 @@ const Analytics = () => {
           <div className="header-cards w-full flex flex-wrap gap-3">
             <HeaderCard
               title="Overall Completion"
-              value={`${thisMonthOverallCompletion}%`}
-              subtitle={`${diff} from last month`}
-              progress={thisMonthOverallCompletion}
+              value={`${progress}%`}
+              subtitle={`${diff}% from last month`}
+              progress={progress}
             />
             <HeaderCard
               title="Current Streak"
@@ -72,8 +96,8 @@ const Analytics = () => {
             />
             <HeaderCard
               title="This Week"
-              value={`32/35`}
-              subtitle={`91% completion rate`}
+              value={`${lastWeekCompletedHabits}/${lastWeekPossibleCompletion}`}
+              subtitle={`${lastWeekPossibleCompletion >0 ?  Math.round((lastWeekCompletedHabits /lastWeekPossibleCompletion * 100)):0}% completion rate`}
             />
           </div>
         </div>

@@ -1,60 +1,86 @@
 function useOverallCompletion(habits) {
-  const lastMonthHabit = habits?.getHabits?.filter((habit) => {
-    return habit.completedDates?.some((date) => {
-      const d = new Date();
-      d.setMonth(d.getMonth() - 1);
-      return date.split("T")[0].slice(0, 7) == d.toISOString().slice(0, 7);
-    });
-  });
-  // const thisMonthHabits = habits?.getHabits?.filter((habit) => {
-  //   return habit.completedDates?.some((date) => {
-  //     return (
-  //       date.split("T")[0].slice(0, 7) == new Date().toISOString().slice(0, 7)
-  //     );
-  //   });
-  // });
-  const thisMonthTotalComletedHabits = habits?.getHabits?.reduce((sum, habit) => {
-    return sum + (habit.completedDates?.length || 0);
-  }, 0);
-  const lastMonthTotalCompletedHabits = lastMonthHabit?.reduce((sum, habit) => {
-    return sum + (htalCompleteabit.completedDates?.length || 0);
-  }, 0);
-  const d = new Date();
-  const year = d.getFullYear();
-  const month = d.getMonth() - 1;
-  const lastMontnDays = new Date(year, month + 1, 0).getDate();
-  const thisMonthtotalPossibleCompletions =
-    habits?.getHabits?.length * new Date().getDate();
-  const lastMonthtotalPossibleCompletions =
-    lastMonthHabit?.length * lastMontnDays;
+  /* this month completed habits */
+  // set status iscompletedThisMonth, neverCompleted, comletedBeforOnly for each habit
+  const setThisMonthsHabit =habits?.getHabits?.map((habit) => {
+    const thisMonthCompleted = habit.completedDates?.filter((date) => {
+      return (
+        date.split("T")[0].slice(0, 7) == new Date().toISOString().slice(0, 7)
+      );
+    })
+    let status ="isCompletedThisMonth"
+    if(thisMonthCompleted?.length > 0){
+      status = "isCompletedThisMonth";
+    }else if(thisMonthCompleted?.length === 0){
+      status = "neverCompleted";
+    }
+    else{
+      status ="comletedBeforOnly"
+    }
+    return {...habit,status, thisMonthCompleted}
+  })
 
-  const thisMonthOverallCompletion =
-    thisMonthTotalComletedHabits > 0
-      ? Math.round(
-          (thisMonthTotalComletedHabits / thisMonthtotalPossibleCompletions) *
-            100
-        )
-      : 0;
-  const lastMonthOverallCompletion =
-    lastMonthTotalCompletedHabits > 0
-      ? Math.round(
-          (lastMonthTotalCompletedHabits / lastMonthtotalPossibleCompletions) *
-            100
-        )
-      : 0;
+
+const td = new Date();
+const startOfMonth = new Date(td.getFullYear(), td.getMonth(), 1);
+const endOfMonth = new Date(td.getFullYear(), td.getMonth() + 1, 0);
+// this month possible completions checking dayname in selectedDays
+  const thisMonthPossibleCompletion = habits?.getHabits?.reduce((sum, habit) => {
+    let count = 0;
+    for (let d=new Date(startOfMonth);d<=endOfMonth;d.setDate(d.getDate()+1)) {
+      const dayName = d.toLocaleString('en-US', { weekday: 'long' }).toLocaleLowerCase();
+      if(habit.selectedDays?.some((d)=>d.toLocaleLowerCase()===dayName)){
+        count ++
+      }
+    }
+    return sum + count;
+}, 0);
+  // this month completed habits counting by habit status
+  const thisMonthCompletedHabits =setThisMonthsHabit?.reduce((sum,habit)=>{
+    if(habit.status ==="isCompletedThisMonth"){
+        return sum + (habit.thisMonthCompleted?.length || 0)
+    }
+     return sum;
+},0)
+const progress = thisMonthPossibleCompletion > 0
+  ? Math.round((thisMonthCompletedHabits / thisMonthPossibleCompletion) * 100)
+  : 0;
+
+const today = new Date();
+const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+const lastMonthStr = `${lastMonth.getFullYear()}-${(lastMonth.getMonth() + 1).toString().padStart(2,'0')}`;
+
+  const lastMonthHabit = habits?.getHabits?.filter((habit) => {
+    habit.completedDates?.some((date) => {
+      const d=new Date(date)
+      const dMonthStr = `${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2,'0')}`;
+    return dMonthStr === lastMonthStr;
+     }) || [];
+
+  return { ...habit, lastMonthHabit };
+  });
+  const lastMonthCompletedhabit =lastMonthHabit?.reduce((sum,habit)=>{
+    
+    return sum + (habit?.completedDates?.length ||0 )
+  },0)
+  const lastMonthPossibleComplition =lastMonthHabit?.reduce((sum,habit)=>{
+      return sum + (habit.selectedDays?.length *lastMontnDays)
+  },0)
+  const lastMonthProgress = lastMonthPossibleComplition > 0 ?Math.round((lastMonthCompletedhabit / lastMonthPossibleComplition) * 100):0
 
   let diff;
-  if (lastMonthOverallCompletion > thisMonthOverallCompletion) {
-    diff = `-${lastMonthOverallCompletion - thisMonthOverallCompletion}`;
+  if (lastMonthProgress > progress) {
+    diff = `-${lastMonthProgress - progress}`;
   } else {
-    diff = `+${thisMonthOverallCompletion - lastMonthOverallCompletion}`;
+    diff = `+${progress - lastMonthProgress}`;
   }
-
   return {
+    setThisMonthsHabit,
+    thisMonthCompletedHabits,
+    thisMonthPossibleCompletion,
+    progress,
     lastMonthHabit,
-    thisMonthOverallCompletion,
-    lastMonthOverallCompletion,
-    diff,
+    lastMonthCompletedhabit,
+    diff
   };
 }
 export default useOverallCompletion;

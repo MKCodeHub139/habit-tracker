@@ -43,12 +43,13 @@ const resolvers ={
         createHabit:async(parent,args,context)=>{
             const {user} =context
             const {title,category,frequency,selectedDays} =args.input
+             
             const createHabit = await Habit.create({
                 userId:user.id,
                 title,
                 category,
                 frequency,
-                selectedDays,
+                selectedDays:frequency ==="Daily" ? ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'] : selectedDays,
                 completedDates:[]
             })
             return createHabit
@@ -62,7 +63,7 @@ const resolvers ={
                     title,
                     category,
                     frequency,
-                    selectedDays,
+                selectedDays:frequency ==="Daily" ? ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'] : selectedDays,
                 }
             },{new:true})
             

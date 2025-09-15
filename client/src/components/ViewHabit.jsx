@@ -88,14 +88,12 @@ const ViewHabit = () => {
                 {data?.getHabit?.frequency}
               </span>
             </p>
-            {data?.getHabit?.frequency !== "Daily" && (
               <p>
                 <span className="font-[600]">Selected Days :</span>{" "}
                 <span className="bg-fuchsia-300 px-3 rounded-2xl py-[2px] text-black mx-3">
                   {data?.getHabit?.selectedDays?.join(" , ")}
                 </span>
               </p>
-            )}
             <p>
               <span className="font-[600]">Current Streak 🔥 : </span>{" "}
               <span className="bg-fuchsia-300 px-3 rounded-2xl py-[2px] text-black mx-3">

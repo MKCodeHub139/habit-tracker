@@ -35,7 +35,7 @@ const handleCreateHabit=async(e)=>{
         title:formData.title,
         category:formData.category,
         frequency:formData.frequency,
-        selectedDays:formData.selectDay
+        selectedDays:formData.selectDay 
       }
       
     
