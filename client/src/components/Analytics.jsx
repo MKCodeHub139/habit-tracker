@@ -2,12 +2,19 @@ import React, { useMemo, useState } from "react";
 import HeaderCard from "./Analytics components/HeaderCard";
 import useAllHabits from "../hooks/analytics/headerCards/useAllHabits";
 import useOverallCompletion from "../hooks/analytics/headerCards/useOverallCompletion";
+import { Link } from "react-router-dom";
+import HabitPerformance from "./Analytics components/analyticsAcions/HabitPerformance";
+import Overview from "./Analytics components/analyticsAcions/Overview";
+import CalenderView from "./Analytics components/analyticsAcions/CalenderView";
+import Insights from "./Analytics components/analyticsAcions/Insights";
 const Analytics = () => {
+  
   const { habits, isLoading, isError } = useAllHabits();
   const {
     progress,
     diff
   } = useOverallCompletion(habits);
+  const [activeAction,setActiveAction] =useState("overview")  
   const today = new Date().toISOString().slice(0, 10);
   const sevenDaysAgo = new Date();
   sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
@@ -102,19 +109,34 @@ const lastWeekPossibleCompletion = habits?.getHabits?.reduce((sum, habit) => {
           </div>
         </div>
         <div className="habit-actions md:w-2/3 lg:w-2/5 sm:w-2/3 bg-fuchsia-400 h-8 rounded-full flex justify-around items-center text-white my-5">
-          <button className="bg-fuchsia-500 px-2 rounded-full hover:bg-fuchsia-300 cursor-pointer">
+          <button onClick={(e)=>setActiveAction('overview')} className={`${activeAction==="overview"?"bg-fuchsia-600 hover:bg-fuchsia-500":"hover:bg-fuchsia-300"} px-2 rounded-full  cursor-pointer`}>
             Overview
           </button>
-          <button className=" px-2 rounded-full hover:bg-fuchsia-300 cursor-pointer">
+          <button onClick={(e)=>setActiveAction('habit-performance')} className= {`${activeAction==="habit-performance"?"bg-fuchsia-600 hover:bg-fuchsia-500":"hover:bg-fuchsia-300"}  px-2 rounded-full  cursor-pointer`}>
             Habit Performance
-          </button>
-          <button className="px-2 rounded-full hover:bg-fuchsia-300 cursor-pointer">
+            </button>
+          <button onClick={(e)=>setActiveAction('calender-view')} className= {`${activeAction==="calender-view"?"bg-fuchsia-600 hover:bg-fuchsia-500":"hover:bg-fuchsia-300"} px-2 rounded-full  cursor-pointer`}>
             Calender View
           </button>
-          <button className="px-2 rounded-full hover:bg-fuchsia-300 cursor-pointer">
+          <button onClick={(e)=>setActiveAction('insights')} className={`${activeAction==="insights"?"bg-fuchsia-600 hover:bg-fuchsia-500":"hover:bg-fuchsia-300"} px-2 rounded-full  cursor-pointer`}>
             Insights
           </button>
         </div>
+        {/* habits analytics by charts and range */}
+        {activeAction==="overview" &&(
+          <Overview/>
+
+        )}
+        
+        {activeAction==="habit-performance" &&(
+          <HabitPerformance/>
+        )}
+        {activeAction==="calender-view" &&(
+          <CalenderView/>
+        )}
+        {activeAction==="insights" &&(
+          <Insights/>
+        )}
       </div>
     </div>
   );
