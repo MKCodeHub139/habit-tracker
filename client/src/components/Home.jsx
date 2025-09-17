@@ -7,11 +7,18 @@ import {
   DeleteHabit,
 } from "../graphql/mutations";
 import { Link } from "react-router-dom";
+import useAllHabits from "../hooks/analytics/headerCards/useAllHabits";
+import Daily from "./HomeComponents/Daily";
+import Weekly from "./HomeComponents/Weekly";
 
 const Home = () => {
-  const { data, error, loading } = useQuery(GetHabits, {
-    variables: { userId: "68bacc259f8fdce8e0a209b2" },
-  });
+  const todayDay=new Date().toLocaleString('en-US',{weekday:'long'}).toLocaleLowerCase()
+  // const { habits, error, loading } = useQuery(GetHabits, {
+  //   variables: { userId: "68bacc259f8fdce8e0a209b2" },
+  // });
+  const {habits,isError,isLoading} =useAllHabits()
+  const [activeHabit,setActiveHabit] =useState('Daily')
+  console.log(habits)
   const [Update_Complete_Dates] = useMutation(UpdateCompleteDates);
   const [Update_Streak] = useMutation(UpdateStreak);
   const [Delete_Habit] = useMutation(DeleteHabit);
@@ -19,9 +26,9 @@ const Home = () => {
   // streak logic
 
   useEffect(() => {
-    if (!data?.getHabits) return;
+    if (!habits?.getHabits) return;
 
-    data.getHabits.forEach((habit) => {
+    habits.getHabits.forEach((habit) => {
       if (!habit?.completedDates?.length) return;
 
       const sortedDates = habit.completedDates
@@ -57,7 +64,7 @@ const Home = () => {
         },
       });
     });
-  }, [data]);
+  }, [habits]);
 
   const handleComplete = async (e, habit) => {
     if (e.target.checked) {
@@ -84,20 +91,21 @@ const Home = () => {
   // day by sorting
   // const handleShowWeekly =(e)=>{
   //   e.preventDefault()
-  //   const weeklyHabit=data?.getHabits?.filter((habit)=>{
+  //   const weeklyHabit=habits?.getHabits?.filter((habit)=>{
   //       return habit.frequency =="weekly"
   //   })
   //   console.log(weeklyHabit)
   // }
-  if (loading) return <h1>Loading</h1>;
+  console.log(activeHabit)
+  if (isLoading) return <h1>Loading</h1>;
   return (
     <div className="min-h-screen py-[4rem]">
       <div className="container mx-auto ">
         <div className="frequency-div flex gap-[5rem]">
-          <button className="cursor-pointer bg-fuchsia-400 text-base-100 hover:bg-fuchsia-300 py-1 px-5 rounded">
+          <button className="cursor-pointer bg-fuchsia-400 text-base-100 hover:bg-fuchsia-300 py-1 px-5 rounded"onClick={()=>setActiveHabit('Daily')}>
             Today
           </button>
-          <button className="cursor-pointer bg-fuchsia-400 text-base-100 hover:bg-fuchsia-300 py-1 px-5 rounded" /*onClick={handleShowWeekly}*/>
+          <button className="cursor-pointer bg-fuchsia-400 text-base-100 hover:bg-fuchsia-300 py-1 px-5 rounded" onClick={()=>setActiveHabit('Weekly')} >
             Weekly
           </button>
           <Link to="/analytics" className="cursor-pointer bg-fuchsia-400 text-base-100 hover:bg-fuchsia-300 py-1 px-5 rounded">
@@ -108,53 +116,14 @@ const Home = () => {
           <div className="category w-full">
             <h3 className="text-xl text-base-100">Study</h3>
           </div>
-          {data?.getHabits?.map((habit) => {
-            return (
-              <div className="habit-card w-1/3 bg-fuchsia-400 text-white min-h-[10rem] rounded shadow-xl p-3 grow">
-                <div className="title flex justify-between items-center w-[70%]">
-                  <h5 className="text-[1.2rem] font-bold">{habit.title}</h5>
-                  <div className="achive-check flex flex-col items-center">
-                    <label htmlFor="">Acheive</label>
-                    <input
-                      type="checkbox"
-                      className={`w-4 h-4 accent-fuchsia-500`}
-                      onChange={(e) => handleComplete(e, habit)}
-                      disabled={habit?.completedDates?.some(
-                        (date) =>
-                          new Date(date).toISOString().split("T")[0] === today
-                      )}
-                      checked={habit?.completedDates?.some(
-                        (date) =>
-                          new Date(date).toISOString().split("T")[0] === today
-                      )}
-                    />
-                  </div>
-                </div>
-                <div className="frequency">
-                  <p>Frequency : {habit.frequency}</p>
-                </div>
-                <div className="streak">
-                  <p>Streak 🔥 : {habit.streak}</p>
-                </div>
-                <div className="longest-streak">
-                  <p>longest Streak 🔥 : {habit.longestStreak} </p>
-                </div>
-                <div className="action-btns flex gap-9 items-center mt-4 ">
-                  <Link
-                    to={`/habit?habitId=${habit.id}`}
-                    className="bg-base-200 text-black hover:bg-base-300 px-5 cursor-pointer rounded"
-                  >
-                    View
-                  </Link>
-                  <button
-                    className="bg-base-200 text-black hover:bg-base-400 px-5 cursor-pointer rounded"
-                    onClick={(e) => handleDelete(e, habit.id)}
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-            );
+          {habits?.getHabits?.map((habit) => {
+
+            if (habit?.selectedDays?.includes(todayDay) && activeHabit ==="Daily") 
+             return <Daily habit={habit} today={today} handleComplete={handleComplete} handleDelete={handleDelete}/>
+            if(activeHabit ==="Weekly" && !habit?.selectedDays?.includes(todayDay)){
+             return <Weekly habit={habit} today={today} handleComplete={handleComplete} handleDelete={handleDelete}/>
+
+            }
           })}
         </div>
       </div>

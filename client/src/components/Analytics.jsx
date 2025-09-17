@@ -124,7 +124,7 @@ const lastWeekPossibleCompletion = habits?.getHabits?.reduce((sum, habit) => {
         </div>
         {/* habits analytics by charts and range */}
         {activeAction==="overview" &&(
-          <Overview/>
+          <Overview lastWeekHabits={lastWeekHabits} lastWeekPossibleCompletion={lastWeekPossibleCompletion} habits={habits}/>
 
         )}
         
