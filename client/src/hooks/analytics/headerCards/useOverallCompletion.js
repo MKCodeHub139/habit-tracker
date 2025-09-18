@@ -100,7 +100,7 @@ const lastMonthProgress= lastMonthPossibleComplition>0?Math.round((lastMonthComp
     thisMonthCompletedHabits,
     thisMonthPossibleCompletion,
     progress,
-    diff
+    diff,
   };
 }
 export default useOverallCompletion;

@@ -19,7 +19,6 @@ const ViewHabit = () => {
   const year = todayDate.getFullYear();
   const month = todayDate.getMonth();
   const lastDate = new Date(year, month + 1, 0).getDate();
-  console.log(lastDate);
   const { data, error, loading } = useQuery(GetHabit, {
     variables: { id },
   });

@@ -118,9 +118,9 @@ const lastWeekPossibleCompletion = habits?.getHabits?.reduce((sum, habit) => {
           <button onClick={(e)=>setActiveAction('calender-view')} className= {`${activeAction==="calender-view"?"bg-fuchsia-600 hover:bg-fuchsia-500":"hover:bg-fuchsia-300"} px-2 rounded-full  cursor-pointer`}>
             Calender View
           </button>
-          <button onClick={(e)=>setActiveAction('insights')} className={`${activeAction==="insights"?"bg-fuchsia-600 hover:bg-fuchsia-500":"hover:bg-fuchsia-300"} px-2 rounded-full  cursor-pointer`}>
+          {/* <button onClick={(e)=>setActiveAction('insights')} className={`${activeAction==="insights"?"bg-fuchsia-600 hover:bg-fuchsia-500":"hover:bg-fuchsia-300"} px-2 rounded-full  cursor-pointer`}>
             Insights
-          </button>
+          </button> */}
         </div>
         {/* habits analytics by charts and range */}
         {activeAction==="overview" &&(

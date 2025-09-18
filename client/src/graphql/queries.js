@@ -1,5 +1,14 @@
 import { gql } from "@apollo/client";
 
+const GetUser =gql`
+query GetUser {
+  getUser {
+    email
+    id
+    name
+  }
+}
+`
 const GetHabits =gql`
 query GetHabits($userId: ID!) {
   getHabits(userId: $userId) {
@@ -42,4 +51,4 @@ query getHabit($id: ID!) {
 }
 `
 
-export {GetHabits,GetHabit}
+export {GetHabits,GetHabit,GetUser}

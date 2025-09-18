@@ -12,6 +12,7 @@ import Daily from "./HomeComponents/Daily";
 import Weekly from "./HomeComponents/Weekly";
 
 const Home = () => {
+  
   const todayDay=new Date().toLocaleString('en-US',{weekday:'long'}).toLocaleLowerCase()
   // const { habits, error, loading } = useQuery(GetHabits, {
   //   variables: { userId: "68bacc259f8fdce8e0a209b2" },
