@@ -1,5 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import {GrFormView, MdDelete} from '../../icons/icons'
+
 const Daily = ({habit,today,handleDelete,handleComplete}) => {
   return (
          <div className="habit-card w-1/3 bg-fuchsia-400 text-white min-h-[10rem] rounded shadow-xl p-3 grow">
@@ -34,15 +36,15 @@ const Daily = ({habit,today,handleDelete,handleComplete}) => {
                   <div className="action-btns flex gap-9 items-center mt-4 ">
                     <Link
                       to={`/habit?habitId=${habit.id}`}
-                      className="bg-base-200 text-black hover:bg-base-300 px-5 cursor-pointer rounded"
+                      className="bg-base-200 text-black hover:bg-base-300 px-5 cursor-pointer rounded flex items-center"
                     >
-                      View
+                     <GrFormView/> View
                     </Link>
                     <button
-                      className="bg-base-200 text-black hover:bg-base-400 px-5 cursor-pointer rounded"
+                      className=" hover:bg-base-400 px-5 cursor-pointer rounded flex items-center bg-red-500 text-base-100 hover:bg-red-400"
                       onClick={(e) => handleDelete(e, habit.id)}
                     >
-                      Delete
+                      <MdDelete/>Delete
                     </button>
                   </div>
                 </div>

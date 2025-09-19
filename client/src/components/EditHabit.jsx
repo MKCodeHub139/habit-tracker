@@ -57,7 +57,6 @@ const EditHabit = () => {
 //     setSelectDay(newSelect)
 //     setFormData((prev)=>({...prev,selectDay:newSelect}))
 //   }
-  console.log(data)
     const handleCreateHabit=async(e)=>{
     e.preventDefault()
     const response =await Edit_Habit({variables:{
@@ -69,7 +68,6 @@ const EditHabit = () => {
         selectedDays:formData.selectDay
       }
     }})
-      console.log(response)
 }
 if(loading) return <h2>Loading...</h2> 
   return (

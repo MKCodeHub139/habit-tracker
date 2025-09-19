@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client/react";
 import React, { useEffect, useRef, useState } from "react";
 import { GetHabits } from "../graphql/queries";
+import { IoIosLogIn, IoIosToday } from "react-icons/io";
 import {
   UpdateCompleteDates,
   UpdateStreak,
@@ -10,16 +11,15 @@ import { Link } from "react-router-dom";
 import useAllHabits from "../hooks/analytics/headerCards/useAllHabits";
 import Daily from "./HomeComponents/Daily";
 import Weekly from "./HomeComponents/Weekly";
+import useGetUser from "../hooks/analytics/headerCards/useGetUser";
+import { MdOutlineAnalytics } from "react-icons/md";
+import { FaCalendarWeek } from "react-icons/fa";
 
 const Home = () => {
-  
+  const {user} =useGetUser()
   const todayDay=new Date().toLocaleString('en-US',{weekday:'long'}).toLocaleLowerCase()
-  // const { habits, error, loading } = useQuery(GetHabits, {
-  //   variables: { userId: "68bacc259f8fdce8e0a209b2" },
-  // });
   const {habits,isError,isLoading} =useAllHabits()
   const [activeHabit,setActiveHabit] =useState('Daily')
-  console.log(habits)
   const [Update_Complete_Dates] = useMutation(UpdateCompleteDates);
   const [Update_Streak] = useMutation(UpdateStreak);
   const [Delete_Habit] = useMutation(DeleteHabit);
@@ -89,28 +89,21 @@ const Home = () => {
     });
     return deleteHabit;
   };
-  // day by sorting
-  // const handleShowWeekly =(e)=>{
-  //   e.preventDefault()
-  //   const weeklyHabit=habits?.getHabits?.filter((habit)=>{
-  //       return habit.frequency =="weekly"
-  //   })
-  //   console.log(weeklyHabit)
-  // }
-  console.log(activeHabit)
   if (isLoading) return <h1>Loading</h1>;
+  if(!user && isLoading===false ) return <div className="w-full h-screen p-5 text-xl text-white text-center ">You are Not Logged In! <Link to="/login" className="underline text-pink-900">Login </Link></div>
+  if(!habits?.getHabits?.length >0) return <div className="w-full h-screen p-5 text-xl text-white text-center ">No habits found!</div>
   return (
     <div className="min-h-screen py-[4rem]">
       <div className="container mx-auto ">
-        <div className="frequency-div flex gap-[5rem]">
-          <button className="cursor-pointer bg-fuchsia-400 text-base-100 hover:bg-fuchsia-300 py-1 px-5 rounded"onClick={()=>setActiveHabit('Daily')}>
-            Today
+        <div className="frequency-div flex gap-[4rem]">
+          <button className="cursor-pointer bg-fuchsia-400 text-base-100 hover:bg-fuchsia-300 py-1 px-5 rounded flex items-center gap-2"onClick={()=>setActiveHabit('Daily')}>
+            <IoIosToday />Today
           </button>
-          <button className="cursor-pointer bg-fuchsia-400 text-base-100 hover:bg-fuchsia-300 py-1 px-5 rounded" onClick={()=>setActiveHabit('Weekly')} >
-            Weekly
+          <button className="cursor-pointer bg-fuchsia-400 text-base-100 hover:bg-fuchsia-300 py-1 px-5 rounded flex items-center gap-2" onClick={()=>setActiveHabit('Weekly')} >
+            <FaCalendarWeek />Weekly
           </button>
-          <Link to="/analytics" className="cursor-pointer bg-fuchsia-400 text-base-100 hover:bg-fuchsia-300 py-1 px-5 rounded">
-            OverAll
+          <Link to="/analytics" className="cursor-pointer bg-fuchsia-400 text-base-100 hover:bg-fuchsia-300 py-1 px-5 rounded flex items-center gap-2">
+            <MdOutlineAnalytics /> OverAll
           </Link>
         </div>
         <div className="habits flex flex-wrap gap-5 my-11">
@@ -118,13 +111,12 @@ const Home = () => {
             <h3 className="text-xl text-base-100">Study</h3>
           </div>
           {habits?.getHabits?.map((habit) => {
-
-            if (habit?.selectedDays?.includes(todayDay) && activeHabit ==="Daily") 
-             return <Daily habit={habit} today={today} handleComplete={handleComplete} handleDelete={handleDelete}/>
-            if(activeHabit ==="Weekly" && !habit?.selectedDays?.includes(todayDay)){
-             return <Weekly habit={habit} today={today} handleComplete={handleComplete} handleDelete={handleDelete}/>
-
-            }
+              if (habit?.selectedDays?.includes(todayDay) && activeHabit ==="Daily") 
+               return <Daily habit={habit} today={today} handleComplete={handleComplete} handleDelete={handleDelete}/>
+              if(activeHabit ==="Weekly" && !habit?.selectedDays?.includes(todayDay)){
+               return <Weekly habit={habit} today={today} handleComplete={handleComplete} handleDelete={handleDelete}/>
+              }
+            
           })}
         </div>
       </div>

@@ -1,8 +1,10 @@
 import React, { useRef, useState } from "react";
 import {useMutation} from '@apollo/client/react';
 import { CreateHabit as createHabit } from "../graphql/mutations";
+import useGetUser from "../hooks/analytics/headerCards/useGetUser";
 
 const CreateHabit = () => {
+  const {user} = useGetUser()
   const [selectDayDropdown, setSelectDayDropdown] = useState(false);
   const [selectDay,setSelectDay] =useState([])
   const [formData ,setFormaData] =useState({
@@ -30,17 +32,20 @@ const CreateHabit = () => {
   }
 const handleCreateHabit=async(e)=>{
     e.preventDefault()
-    const response =await Create_Habit({variables:{
-      input:{
-        title:formData.title,
-        category:formData.category,
-        frequency:formData.frequency,
-        selectedDays:formData.selectDay 
-      }
+    if(user){
+      const response =await Create_Habit({variables:{
+        input:{
+          title:formData.title,
+          category:formData.category,
+          frequency:formData.frequency,
+          selectedDays:formData.selectDay 
+        }
+        
       
-    
-    }})
-      console.log(response)
+      }})
+    }else{
+      alert('you are not logged in')
+    }
 }
 
   return (

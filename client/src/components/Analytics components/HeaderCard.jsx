@@ -1,14 +1,22 @@
 import React from 'react'
+import { IoAnalytics } from 'react-icons/io5'
 
 const HeaderCard = ({
     title,
     value,
     subtitle,
-    progress
+    progress,
+    icon,
+    diff
 }) => {
   return (
      <div className="overallCompletion-card border-2 hover:border-fuchsia-600 shadow-xl cursor-pointer  border-fuchsia-400 p-3 rounded-2xl my-5 min-w-1/5  grow min-h-[150px] text-white">
-                    <p className="pb-5">{title}</p>
+                    <div className="head flex justify-between items-center h-[30px] mb-5">
+                      <div className="title ">
+                     <p className="">{title}</p>
+                      </div>
+                    <div className={`icon  ${(diff !== undefined && diff <0) &&('rotate-45')}`}>{icon}</div>
+                    </div>
                     <h2 className="font-extrabold text-2xl">{value}</h2>
                     <p className="text-[14px] opacity-75">{subtitle}</p>
                     {progress !==undefined && (

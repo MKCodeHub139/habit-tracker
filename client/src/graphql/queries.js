@@ -10,8 +10,8 @@ query GetUser {
 }
 `
 const GetHabits =gql`
-query GetHabits($userId: ID!) {
-  getHabits(userId: $userId) {
+query GetHabits{
+  getHabits{
     category
     completedDates
     frequency

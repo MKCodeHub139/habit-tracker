@@ -7,6 +7,11 @@ import HabitPerformance from "./Analytics components/analyticsAcions/HabitPerfor
 import Overview from "./Analytics components/analyticsAcions/Overview";
 import CalenderView from "./Analytics components/analyticsAcions/CalenderView";
 import Insights from "./Analytics components/analyticsAcions/Insights";
+import { IoAnalytics } from 'react-icons/io5'
+import { FaFire } from "react-icons/fa";
+import { GoGoal } from "react-icons/go";
+import { SlCalender } from "react-icons/sl";
+
 const Analytics = () => {
   
   const { habits, isLoading, isError } = useAllHabits();
@@ -86,23 +91,23 @@ const lastWeekPossibleCompletion = habits?.getHabits?.reduce((sum, habit) => {
         <div className="header">
           <div className="header-cards w-full flex flex-wrap gap-3">
             <HeaderCard
-              title="Overall Completion"
+              title="Overall Completion" icon={<IoAnalytics />} diff={diff}
               value={`${progress}%`}
               subtitle={`${diff}% from last month`}
               progress={progress}
             />
             <HeaderCard
-              title="Current Streak"
+              title="Current Streak"icon={<FaFire/>}
               value={`${currentStreak} days`}
               subtitle={`Personal best: ${longestStreak} days`}
             />
             <HeaderCard
-              title="Active Habits"
+              title="Active Habits"icon={<GoGoal/>}
               value={activeHabit}
               subtitle={`${newHabit} new this month`}
             />
             <HeaderCard
-              title="This Week"
+              title="This Week"icon={<SlCalender/>}
               value={`${lastWeekCompletedHabits}/${lastWeekPossibleCompletion}`}
               subtitle={`${lastWeekPossibleCompletion >0 ?  Math.round((lastWeekCompletedHabits /lastWeekPossibleCompletion * 100)):0}% completion rate`}
             />

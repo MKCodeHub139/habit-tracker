@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import {LoginUser} from '../graphql/mutations';
 import { useMutation } from "@apollo/client/react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -43,10 +43,11 @@ const Login = () => {
         />
         <button
           type="submit"
-          className="cursor-pointer bg-red-300 py-1 rounded hover:bg-red-200"
+          className="cursor-pointer bg-fuchsia-300 py-1 rounded hover:bg-fuchsia-200"
         >
           Login
         </button>
+        <p>Create a new account <Link to="/signup" className="underline text-pink-900">Signup</Link></p>
       </form>
     </div>
   );

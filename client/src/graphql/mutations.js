@@ -16,6 +16,13 @@ token
 }
 }
 `
+const LogoutUser =gql`
+mutation logoutUser($id:ID!){
+logoutUser(id:$id){
+  id
+}
+}
+`
 const CreateHabit= gql`
 mutation createHabit($input:CreateHabitInput!){
 createHabit(input:$input){
@@ -66,4 +73,4 @@ editHabit(input:$input){
 }
 }
 `
-export {CreateUser,LoginUser,CreateHabit,UpdateCompleteDates,UpdateStreak,DeleteHabit,EditHabit}
+export {CreateUser,LoginUser,CreateHabit,UpdateCompleteDates,UpdateStreak,DeleteHabit,EditHabit,LogoutUser}
