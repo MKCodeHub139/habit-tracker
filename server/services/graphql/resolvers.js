@@ -50,7 +50,7 @@ const resolvers ={
           logoutUser:async(parent,args,context)=>{
             const {user,req,res}=context
             if(user){
-                // console.log(res?.cookie)
+                return res.clearCookie('token')
             }
         },
         createHabit:async(parent,args,context)=>{

@@ -7,7 +7,7 @@ import {
   UpdateStreak,
   DeleteHabit,
 } from "../graphql/mutations";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useAllHabits from "../hooks/analytics/headerCards/useAllHabits";
 import Daily from "./HomeComponents/Daily";
 import Weekly from "./HomeComponents/Weekly";
@@ -23,6 +23,7 @@ const Home = () => {
   const [Update_Complete_Dates] = useMutation(UpdateCompleteDates);
   const [Update_Streak] = useMutation(UpdateStreak);
   const [Delete_Habit] = useMutation(DeleteHabit);
+  const navigate =useNavigate()
   const today = new Date().toISOString().split("T")[0];
   // streak logic
 
@@ -89,8 +90,12 @@ const Home = () => {
     });
     return deleteHabit;
   };
+ useEffect(() => {
+    if (!user && isLoading==false) {
+      navigate("/login",); 
+    }
+  }, [user, navigate]);
   if (isLoading) return <h1>Loading</h1>;
-  if(!user && isLoading===false ) return <div className="w-full h-screen p-5 text-xl text-white text-center ">You are Not Logged In! <Link to="/login" className="underline text-pink-900">Login </Link></div>
   if(!habits?.getHabits?.length >0) return <div className="w-full h-screen p-5 text-xl text-white text-center ">No habits found!</div>
   return (
     <div className="min-h-screen py-[4rem]">

@@ -95,7 +95,7 @@ Object?.entries(count)?.map(([day,times])=>{
       </div>
          <ResponsiveContainer width="100%" height="100%" className="">
       <PieChart width={600} height={600}>
-        <Legend verticalAlign="bottom" height={96}/> 
+        <Legend verticalAlign="bottom" height={150}/> 
         <Pie 
           data={pieChartData} className='cursor-pointer'
           cx="50%"

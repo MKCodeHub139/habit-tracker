@@ -2,7 +2,7 @@ import React, { useMemo, useState } from "react";
 import HeaderCard from "./Analytics components/HeaderCard";
 import useAllHabits from "../hooks/analytics/headerCards/useAllHabits";
 import useOverallCompletion from "../hooks/analytics/headerCards/useOverallCompletion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import HabitPerformance from "./Analytics components/analyticsAcions/HabitPerformance";
 import Overview from "./Analytics components/analyticsAcions/Overview";
 import CalenderView from "./Analytics components/analyticsAcions/CalenderView";
@@ -11,9 +11,12 @@ import { IoAnalytics } from 'react-icons/io5'
 import { FaFire } from "react-icons/fa";
 import { GoGoal } from "react-icons/go";
 import { SlCalender } from "react-icons/sl";
+import useGetUser from "../hooks/analytics/headerCards/useGetUser";
+import { useEffect } from "react";
 
 const Analytics = () => {
-  
+  const {user,isLoading:userLoading} =useGetUser()
+  const navigate=useNavigate()
   const { habits, isLoading, isError } = useAllHabits();
   const {
     progress,
@@ -42,16 +45,16 @@ const Analytics = () => {
       return {...habit, status,completedThisWeek}
     })
     // console.log("lastWeekHabits",lastWeekHabits)
-const lastWeekPossibleCompletion = habits?.getHabits?.reduce((sum, habit) => {
-  let daily = 0;
-  let weekly = 0;
-
-  if (habit.frequency === "Daily") {
+    const lastWeekPossibleCompletion = habits?.getHabits?.reduce((sum, habit) => {
+      let daily = 0;
+      let weekly = 0;
+      
+      if (habit.frequency === "Daily") {
     daily = 1;
   } else if (habit.frequency === "Weekly") {
     weekly = 1;
   }
-
+  
   return sum + (daily * 7 + weekly * habit.selectedDays.length);
 }, 0);
 
@@ -71,7 +74,7 @@ const lastWeekPossibleCompletion = habits?.getHabits?.reduce((sum, habit) => {
     });
     return { currentStreak, longestStreak };
   }, [habits, today]);
-
+  
   const activeHabit = useMemo(() => {
    return habits?.getHabits?.reduce((count, habit) => {
       const lastDate = habit.completedDates[habit.completedDates.length - 1];
@@ -80,9 +83,14 @@ const lastWeekPossibleCompletion = habits?.getHabits?.reduce((sum, habit) => {
   }, [habits, today]);
   const newHabit = habits?.getHabits?.reduce((count, habit) => {
     return today.slice(0, 7) == habit?.createdAt.slice(0, 7)
-      ? count + 1
+    ? count + 1
       : count;
   }, 0);
+ useEffect(() => {
+    if (!user) {
+      navigate("/login", { replace: true }); 
+    }
+  }, [user, userLoading, navigate]);
   return (
     <div className="min-h-screen py-[3rem]">
       <div className="container mx-auto ">
