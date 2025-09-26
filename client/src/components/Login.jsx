@@ -24,6 +24,7 @@ const Login = () => {
       <form action="" onSubmit={handleLoginUser} className="flex flex-col w-1/3 gap-4 shadow-2xl my-9 p-5">
         <h2 className="text-2xl font-[600]">Login</h2>
         <label htmlFor="">email</label>
+        <p>demo email:kaifansari@gmail.com</p>
         <input
           type="email"
           name=""
@@ -32,6 +33,7 @@ const Login = () => {
           value={email} onChange={(e)=>setEmail(e.target.value)}
           className="px-2 border-1 rounded"
         />
+        <p>demo password : 1234</p>
         <label htmlFor="">password</label>
         <input
           type="password"

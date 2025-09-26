@@ -26,7 +26,7 @@ logoutUser(id:$id){
 const CreateHabit= gql`
 mutation createHabit($input:CreateHabitInput!){
 createHabit(input:$input){
-     userId
+    userId
     title
     category
     frequency

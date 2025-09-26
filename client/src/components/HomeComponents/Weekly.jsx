@@ -1,8 +1,10 @@
 import React from 'react'
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 const Daily = ({habit,today,handleDelete,handleComplete}) => {
+                  console.log('j')
+  
   return (
-    
          <div className="habit-card w-1/3 bg-fuchsia-400 text-white min-h-[10rem] rounded shadow-xl p-3 grow">
                   <div className="title flex justify-between items-center w-[70%]">
                     <h5 className="text-[1.2rem] font-bold">{habit.title}</h5>

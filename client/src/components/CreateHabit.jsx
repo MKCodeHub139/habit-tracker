@@ -1,12 +1,16 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {useMutation} from '@apollo/client/react';
 import { CreateHabit as createHabit } from "../graphql/mutations";
 import useGetUser from "../hooks/analytics/headerCards/useGetUser";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
 
 const CreateHabit = () => {
-  const {user} = useGetUser()
+  const {user,loading:userLoading} =useGetUser()
+  const navigate=useNavigate()
   const [selectDayDropdown, setSelectDayDropdown] = useState(false);
   const [selectDay,setSelectDay] =useState([])
+  const notify = (msg) => toast(msg);
   const [formData ,setFormaData] =useState({
     title:'',
     category:'',
@@ -40,16 +44,30 @@ const handleCreateHabit=async(e)=>{
           frequency:formData.frequency,
           selectedDays:formData.selectDay 
         }
-        
-      
       }})
+      if(response){
+        notify('habit created successfully')
+        setFormaData({
+    title:'',
+    category:'',
+    frequency:"Daily",
+    selectDay:[]
+  })
+      }
     }else{
       alert('you are not logged in')
     }
 }
 
+useEffect(()=>{
+  if (!user && userLoading===false) {
+     navigate("/login"); 
+   }
+},[user,navigate,userLoading])
+
   return (
     <div className="container mx-auto py-[3rem]">
+      <ToastContainer />
       <h2 className="text-2xl text-base-100">Make Your Habit</h2>
       <form
         action=""

@@ -9,8 +9,8 @@ import mongoDbConnect from './conf/conn.js';
 import { validateUser } from './services/jwt/auth.js';
 
 const app =express()
-const port =8000
-mongoDbConnect('mongodb://127.0.0.1:27017/habit-tracker')
+const port =process.env.PORT || 8000
+mongoDbConnect(process.env.MONGODB)
 app.use(cors({
   origin: "http://localhost:5173", // frontend ka origin
   credentials: true

@@ -1,9 +1,8 @@
-import React, { useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { GetHabit } from "../graphql/queries";
 import { useMutation, useQuery } from "@apollo/client/react";
-import {DeleteHabit} from '../graphql/mutations';
-
+import { DeleteHabit } from "../graphql/mutations";
 import Calendar from "react-calendar";
 import "../calendar.css";
 import "react-calendar/dist/Calendar.css";
@@ -12,12 +11,14 @@ import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { BiCategory } from "react-icons/bi";
 import { FaCalendarDays } from "react-icons/fa6";
+import useGetUser from "../hooks/analytics/headerCards/useGetUser";
 const ViewHabit = () => {
+  const { user, loading: userLoading} = useGetUser();
+  const navigate = useNavigate();
   const [value, onChange] = useState(new Date());
   const [serachParam] = useSearchParams();
   const id = serachParam.get("habitId");
   const [Delete_Habit] = useMutation(DeleteHabit);
-
   const today = new Date().toISOString().split("T")[0];
   const todayDate = new Date();
   const year = todayDate.getFullYear();
@@ -40,6 +41,19 @@ const ViewHabit = () => {
       });
     }
   };
+  const handleDelete = async () => {
+    let confirmed = confirm("Are you sure you want to delete this habit");
+    if (confirmed) {
+      Delete_Habit({ variables: { id } });
+      navigate('/')
+    }
+  };
+  useEffect(() => {
+    if (!user && userLoading === false) {
+      navigate("/login");
+    }
+  }, [user, navigate, userLoading]);
+  if (loading) return <h2>Loading...</h2>;
   return (
     <div className="min-h-screen py-[4rem]">
       <div className="container mx-auto">
@@ -71,16 +85,22 @@ const ViewHabit = () => {
                 to={`/edit-habit?habitId=${data?.getHabit?.id}`}
                 className="bg-fuchsia-700 hover:bg-fuchsia-500 cursor-pointer px-5 rounded text-white flex items-center h-7 gap-2"
               >
-                <FaEdit/> Edit
+                <FaEdit /> Edit
               </Link>
-              <button className="bg-pink-500 hover:bg-pink-400 cursor-pointer px-5 rounded text-white h-7 flex items-center gap-2" onClick={async()=>Delete_Habit({variables:{id}})}>
-                <MdDelete/> Delete
+              <button
+                className="bg-pink-500 hover:bg-pink-400 cursor-pointer px-5 rounded text-white h-7 flex items-center gap-2"
+                onClick={handleDelete}
+              >
+                <MdDelete /> Delete
               </button>
             </div>
           </div>
           <div className="details  text-white flex mt-5 flex-col gap-3">
             <p className="flex">
-              <span className="font-[600] flex items-center gap-2"><BiCategory/>Category : </span>
+              <span className="font-[600] flex items-center gap-2">
+                <BiCategory />
+                Category :{" "}
+              </span>
               <span className="bg-fuchsia-300 px-3 rounded-2xl py-[2px] text-black mx-3">
                 {data?.getHabit?.category}
               </span>
@@ -91,12 +111,15 @@ const ViewHabit = () => {
                 {data?.getHabit?.frequency}
               </span>
             </p>
-              <p className="flex">
-                <span className="font-[600] flex items-center gap-2"><FaCalendarDays/>Selected Days :</span>{" "}
-                <span className="bg-fuchsia-300 px-3 rounded-2xl py-[2px] text-black mx-3">
-                  {data?.getHabit?.selectedDays?.join(" , ")}
-                </span>
-              </p>
+            <p className="flex">
+              <span className="font-[600] flex items-center gap-2">
+                <FaCalendarDays />
+                Selected Days :
+              </span>{" "}
+              <span className="bg-fuchsia-300 px-3 rounded-2xl py-[2px] text-black mx-3">
+                {data?.getHabit?.selectedDays?.join(" , ")}
+              </span>
+            </p>
             <p>
               <span className="font-[600]">Current Streak 🔥 : </span>{" "}
               <span className="bg-fuchsia-300 px-3 rounded-2xl py-[2px] text-black mx-3">
@@ -135,7 +158,7 @@ const ViewHabit = () => {
                 const completedDates =
                   data?.getHabit?.completedDates?.map((d) => d.split("T")[0]) ||
                   [];
-                const dateStr = date.toLocaleDateString("en-CA"); // local YYYY-MM-DD
+                const dateStr = date.toLocaleDateString("en-CA");
                 if (completedDates.includes(dateStr)) {
                   return "text-white rounded-full react-calender";
                 }

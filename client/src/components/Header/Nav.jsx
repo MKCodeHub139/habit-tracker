@@ -1,54 +1,91 @@
-import { useMutation, useQuery } from '@apollo/client/react'
-import React, { useEffect, useState } from 'react'
-import { Link, NavLink, useNavigate } from 'react-router-dom'
-import useGetUser from '../../hooks/analytics/headerCards/useGetUser'
-import { IoIosAdd  } from "react-icons/io";
-import { FaUserCircle } from 'react-icons/fa';
-import { LogoutUser } from '../../graphql/mutations';
-
-
+import { useMutation, useQuery } from "@apollo/client/react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import useGetUser from "../../hooks/analytics/headerCards/useGetUser";
+import { IoIosAdd } from "react-icons/io";
+import { FaUserCircle } from "react-icons/fa";
+import { LogoutUser } from "../../graphql/mutations";
 
 const Nav = () => {
-  const {user} =useGetUser()
-  const [Logout_User] =useMutation(LogoutUser)
-  const navigate =useNavigate()
+  const handleLogout = async () => {
+    const res = await Logout_User({ variables: { id: user?.getUser?.id } });
+    let confirmed =confirm('Are you sure you want to logout')
+    if(confirmed && res){
+        navigate("/login");
+    }
+  };
+  const { user } = useGetUser();
+  const [Logout_User] = useMutation(LogoutUser);
+  const navigate = useNavigate();
   return (
     <div className="main text-base-100 sticky top-0 h-[3rem] flex items-center z-40">
-    <nav className='flex justify-evenly items-center container mx-auto  bg-fuchsia-400 rounded-2xl mt-2 p-1'>
-        <div className="logo"><h1 className='text-2xl'>
-           <Link>Habit</Link> 
-            </h1></div>
+      <nav className="flex justify-evenly items-center container mx-auto  bg-fuchsia-400 rounded-2xl mt-2 p-1">
+        <div className="logo">
+          <h1 className="text-2xl">
+            <Link>Habit</Link>
+          </h1>
+        </div>
         <ul>
-          { user ? (
-      
-            <li className='flex items-center gap-5'>
-              <button className='text-4xl cursor-pointer border-1 hover:bg-fuchsia-100 hover:text-black hover:border-fuchsia-100 rounded-full px-3'>
-                <Link to="/create" className={({isActive})=>`${isActive ?"bg-amber-50":""}`}><IoIosAdd /></Link>
-                </button>
-                <p className='flex items-center gap-2 text-xl'><FaUserCircle />{user?.getUser?.name}</p>
-             
-                <button  className='cursor-pointer border-1 hover:bg-red-400 hover:border-fuchsia-100 rounded-full py-1 px-3' onClick={()=>{
-                  const res= Logout_User({variables:{id:user?.getUser?.id}})
-                  if(res){
-                    navigate('/login')
-                  }
+          {user ? (
+            <li className="flex items-center gap-5">
+              <NavLink
+                to="/create"
+                className={({ isActive }) =>
+                  `${
+                    isActive
+                      ? "bg-fuchsia-100 text-black border-fuchsia-100 hover:bg-fuchsia-200"
+                      : ""
+                  } text-4xl cursor-pointer border-1 hover:bg-fuchsia-100 hover:text-black hover:border-fuchsia-100 rounded-full px-3`
+                }
+              >
+                <IoIosAdd />
+              </NavLink>
 
-                  }}>Logout</button>
+              <p className="flex items-center gap-2 text-xl">
+                <FaUserCircle />
+                {user?.getUser?.name}
+              </p>
+
+              <button
+                className="cursor-pointer border-1 hover:bg-red-400 hover:border-fuchsia-100 rounded-full py-1 px-3"
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
             </li>
-
-       
-          ):(
+          ) : (
             <li>
-            <div className="btns flex gap-4 h-[100%]">
-                <NavLink to="/signup" className={({isActive})=>`${isActive ?"bg-fuchsia-100 text-black border-fuchsia-100":""} cursor-pointer border-1 hover:bg-fuchsia-100 hover:text-black hover:border-0 rounded-full py-1 px-3`}>Signup</NavLink>
-                <NavLink to="/login" className={({isActive})=>`${isActive ?"bg-fuchsia-100 text-black border-fuchsia-100":""} cursor-pointer border-1 hover:bg-fuchsia-100 hover:text-black hover:border-0 rounded-full py-1 px-3`}>Login</NavLink>
-            </div>
+              <div className="btns flex gap-4 h-[100%]">
+                <NavLink
+                  to="/signup"
+                  className={({ isActive }) =>
+                    `${
+                      isActive
+                        ? "bg-fuchsia-100 text-black border-fuchsia-100"
+                        : ""
+                    } cursor-pointer border-1 hover:bg-fuchsia-100 hover:text-black hover:border-0 rounded-full py-1 px-3`
+                  }
+                >
+                  Signup
+                </NavLink>
+                <NavLink
+                  to="/login"
+                  className={({ isActive }) =>
+                    `${
+                      isActive
+                        ? "bg-fuchsia-100 text-black border-fuchsia-100"
+                        : ""
+                    } cursor-pointer border-1 hover:bg-fuchsia-100 hover:text-black hover:border-0 rounded-full py-1 px-3`
+                  }
+                >
+                  Login
+                </NavLink>
+              </div>
             </li>
           )}
         </ul>
-    </nav>
+      </nav>
     </div>
-  )
-}
+  );
+};
 
-export default Nav
+export default Nav;

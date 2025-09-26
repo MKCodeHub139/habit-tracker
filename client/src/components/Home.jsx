@@ -1,7 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client/react";
 import React, { useEffect, useRef, useState } from "react";
-import { GetHabits } from "../graphql/queries";
-import { IoIosLogIn, IoIosToday } from "react-icons/io";
+import { IoIosToday } from "react-icons/io";
 import {
   UpdateCompleteDates,
   UpdateStreak,
@@ -16,20 +15,21 @@ import { MdOutlineAnalytics } from "react-icons/md";
 import { FaCalendarWeek } from "react-icons/fa";
 
 const Home = () => {
-  const {user} =useGetUser()
-  const todayDay=new Date().toLocaleString('en-US',{weekday:'long'}).toLocaleLowerCase()
-  const {habits,isError,isLoading} =useAllHabits()
-  const [activeHabit,setActiveHabit] =useState('Daily')
+  const { user, loading, error } = useGetUser();
+  const todayDay = new Date()
+    .toLocaleString("en-US", { weekday: "long" })
+    .toLocaleLowerCase();
+  const { habits, isError, isLoading } = useAllHabits();
+  const [activeHabit, setActiveHabit] = useState("Daily");
   const [Update_Complete_Dates] = useMutation(UpdateCompleteDates);
   const [Update_Streak] = useMutation(UpdateStreak);
   const [Delete_Habit] = useMutation(DeleteHabit);
-  const navigate =useNavigate()
+  const navigate = useNavigate();
   const today = new Date().toISOString().split("T")[0];
   // streak logic
 
   useEffect(() => {
     if (!habits?.getHabits) return;
-
     habits.getHabits.forEach((habit) => {
       if (!habit?.completedDates?.length) return;
 
@@ -66,7 +66,7 @@ const Home = () => {
         },
       });
     });
-  }, [habits]);
+  }, [habits, today]);
 
   const handleComplete = async (e, habit) => {
     if (e.target.checked) {
@@ -83,46 +83,101 @@ const Home = () => {
   // delete Habit
   const handleDelete = async (e, id) => {
     e.preventDefault();
-    const deleteHabit = await Delete_Habit({
-      variables: {
-        id,
-      },
-    });
-    return deleteHabit;
-  };
- useEffect(() => {
-    if (!user && isLoading==false) {
-      navigate("/login",); 
+    let confirmed = confirm("are you sure yo want to delete this habit.");
+    if (confirmed) {
+      const deleteHabit = await Delete_Habit({
+        variables: {
+          id,
+        },
+      });
+      window.location.reload();
+      return deleteHabit;
     }
-  }, [user, navigate]);
+  };
+  // filter all today's habit
+  const dailyHabits = habits?.getHabits?.filter(
+    (habit) =>
+      habit?.selectedDays?.includes(todayDay) && activeHabit === "Daily"
+  );
+  // filter all weekly habits which is not includes today
+  const weeklyHabits = habits?.getHabits?.filter(
+    (habit) =>
+      !habit?.selectedDays?.includes(todayDay) && activeHabit === "Weekly"
+  );
+  useEffect(() => {
+    if (!user && loading === false) {
+      navigate("/login");
+    }
+  }, [user, navigate, loading]);
+  useEffect(() => {
+    if (habits?.getHabits?.length === 0)
+      return (
+        <div className="w-full h-screen p-5 text-xl text-white text-center ">
+          No habits found!
+        </div>
+      );
+  }, [habits]);
   if (isLoading) return <h1>Loading</h1>;
-  if(!habits?.getHabits?.length >0) return <div className="w-full h-screen p-5 text-xl text-white text-center ">No habits found!</div>
   return (
     <div className="min-h-screen py-[4rem]">
       <div className="container mx-auto ">
         <div className="frequency-div flex gap-[4rem]">
-          <button className="cursor-pointer bg-fuchsia-400 text-base-100 hover:bg-fuchsia-300 py-1 px-5 rounded flex items-center gap-2"onClick={()=>setActiveHabit('Daily')}>
-            <IoIosToday />Today
+          <button
+            className="cursor-pointer bg-fuchsia-400 text-base-100 hover:bg-fuchsia-300 py-1 px-5 rounded flex items-center gap-2"
+            onClick={() => setActiveHabit("Daily")}
+          >
+            <IoIosToday />
+            Today
           </button>
-          <button className="cursor-pointer bg-fuchsia-400 text-base-100 hover:bg-fuchsia-300 py-1 px-5 rounded flex items-center gap-2" onClick={()=>setActiveHabit('Weekly')} >
-            <FaCalendarWeek />Weekly
+          <button
+            className="cursor-pointer bg-fuchsia-400 text-base-100 hover:bg-fuchsia-300 py-1 px-5 rounded flex items-center gap-2"
+            onClick={() => setActiveHabit("Weekly")}
+          >
+            <FaCalendarWeek />
+            Weekly
           </button>
-          <Link to="/analytics" className="cursor-pointer bg-fuchsia-400 text-base-100 hover:bg-fuchsia-300 py-1 px-5 rounded flex items-center gap-2">
+          <Link
+            to="/analytics"
+            className="cursor-pointer bg-fuchsia-400 text-base-100 hover:bg-fuchsia-300 py-1 px-5 rounded flex items-center gap-2"
+          >
             <MdOutlineAnalytics /> OverAll
           </Link>
         </div>
         <div className="habits flex flex-wrap gap-5 my-11">
-          <div className="category w-full">
-            <h3 className="text-xl text-base-100">Study</h3>
-          </div>
-          {habits?.getHabits?.map((habit) => {
-              if (habit?.selectedDays?.includes(todayDay) && activeHabit ==="Daily") 
-               return <Daily habit={habit} today={today} handleComplete={handleComplete} handleDelete={handleDelete}/>
-              if(activeHabit ==="Weekly" && !habit?.selectedDays?.includes(todayDay)){
-               return <Weekly habit={habit} today={today} handleComplete={handleComplete} handleDelete={handleDelete}/>
-              }
-            
-          })}
+          {activeHabit === "Daily" ? (
+            dailyHabits?.length > 0 ? (
+              dailyHabits?.map((habit) => (
+                <Daily
+                  key={habit.id}
+                  habit={habit}
+                  today={today}
+                  handleComplete={handleComplete}
+                  handleDelete={handleDelete}
+                />
+              ))
+            ) : (
+              <div className="text-xl text-base-100 text-center">
+                No Daily habits
+              </div>
+            )
+          ) : null}
+          {activeHabit === "Weekly" ? (
+            dailyHabits?.length > 0 ? (
+              dailyHabits?.map((habit) => (
+                <Weekly
+                  key={habit.id}
+                  habit={habit}
+                  today={today}
+                  handleComplete={handleComplete}
+                  handleDelete={handleDelete}
+                />
+              ))
+            ) : (
+              <div className="text-xl text-base-100 text-center">
+                No weekly habits
+              </div>
+            )
+          ) : null}
         </div>
       </div>
     </div>

@@ -48,8 +48,6 @@ Object?.entries(habitCategoryCount)?.map((name,value)=>{
 // bar chart
 const barChartData = [
 ];
-// console.log(lastWeekHabits.length)
-console.log(count)
 Object?.entries(count)?.map(([day,times])=>{
   barChartData.push({
     name:day, 

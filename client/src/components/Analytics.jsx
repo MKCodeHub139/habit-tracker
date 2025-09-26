@@ -15,7 +15,7 @@ import useGetUser from "../hooks/analytics/headerCards/useGetUser";
 import { useEffect } from "react";
 
 const Analytics = () => {
-  const {user,isLoading:userLoading} =useGetUser()
+  const {user,loading:userLoading} =useGetUser()
   const navigate=useNavigate()
   const { habits, isLoading, isError } = useAllHabits();
   const {
@@ -44,7 +44,6 @@ const Analytics = () => {
       }
       return {...habit, status,completedThisWeek}
     })
-    // console.log("lastWeekHabits",lastWeekHabits)
     const lastWeekPossibleCompletion = habits?.getHabits?.reduce((sum, habit) => {
       let daily = 0;
       let weekly = 0;
@@ -86,11 +85,11 @@ const Analytics = () => {
     ? count + 1
       : count;
   }, 0);
- useEffect(() => {
-    if (!user) {
-      navigate("/login", { replace: true }); 
-    }
-  }, [user, userLoading, navigate]);
+useEffect(()=>{
+  if (!user && userLoading===false) {
+     navigate("/login"); 
+   }
+},[user,navigate,userLoading])
   return (
     <div className="min-h-screen py-[3rem]">
       <div className="container mx-auto ">

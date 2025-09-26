@@ -1,77 +1,85 @@
-import React, { useEffect, useRef, useState } from 'react'
-import {GetHabit} from '../graphql/queries'
-import { useMutation, useQuery } from '@apollo/client/react';
-import { useSearchParams } from 'react-router-dom';
-import { EditHabit as UpdateHabit } from '../graphql/mutations';
-
+import React, { useEffect, useRef, useState } from "react";
+import { GetHabit } from "../graphql/queries";
+import { useMutation, useQuery } from "@apollo/client/react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { EditHabit as UpdateHabit } from "../graphql/mutations";
+import useGetUser from "../hooks/analytics/headerCards/useGetUser";
+import { ToastContainer, toast } from "react-toastify";
 const EditHabit = () => {
-    const [serachParam] =useSearchParams()
-    const editId =serachParam.get('habitId')
-    const [Edit_Habit] =useMutation(UpdateHabit)
-      const [selectDayDropdown, setSelectDayDropdown] = useState(false);
-        const [selectDay,setSelectDay] =useState([])
-      
-        const {data, error, loading} = useQuery(GetHabit,{
-            variables:{id:editId}
-        })
-       const [formData, setFormData] = useState({
-    title: '',
-    category: '',
-    frequency: 'Daily',
+  const { user, loading: userLoading } = useGetUser();
+  const navigate = useNavigate();
+  const notify = (msg) => toast(msg);
+  const [serachParam] = useSearchParams();
+  const editId = serachParam.get("habitId");
+  const [Edit_Habit] = useMutation(UpdateHabit);
+  const [selectDayDropdown, setSelectDayDropdown] = useState(false);
+  const [selectDay, setSelectDay] = useState([]);
+
+  const { data, error, loading } = useQuery(GetHabit, {
+    variables: { id: editId },
+  });
+
+  const [formData, setFormData] = useState({
+    title: "",
+    category: "",
+    frequency: "Daily",
     selectDay: [],
   });
 
   useEffect(() => {
     if (data?.getHabit) {
       setFormData({
-        title: data.getHabit.title || '',
-        category: data.getHabit.category || '',
-        frequency: data.getHabit.frequency || 'Daily',
+        title: data.getHabit.title || "",
+        category: data.getHabit.category || "",
+        frequency: data.getHabit.frequency || "Daily",
         selectDay: data.getHabit.selectedDays || [],
       });
     }
   }, [data]);
-    const dropdown = useRef();
-    const handleDropdown = (e) => {
+  const dropdown = useRef();
+  const handleDropdown = (e) => {
     e.preventDefault();
     setSelectDayDropdown(!selectDayDropdown);
   };
-   const handleCheckboxChange = (day) => {
-    setFormData(prev => {
+  const handleCheckboxChange = (day) => {
+    setFormData((prev) => {
       const selected = prev.selectDay.includes(day);
-      const updatedDays = selected 
-        ? prev.selectDay.filter(d => d !== day) 
+      const updatedDays = selected
+        ? prev.selectDay.filter((d) => d !== day)
         : [...prev.selectDay, day];
       return { ...prev, selectDay: updatedDays };
     });
   };
-//     const handleDropdownCheck=(e)=>{
-//     let newSelect;
 
-//     if(e.target.checked){
-//      newSelect= [...selectDay,,e.target.value]
-//     }
-//     else{
-//         newSelect=selectDay.filter((item)=>item !==e.target.value)
-//     }
-//     setSelectDay(newSelect)
-//     setFormData((prev)=>({...prev,selectDay:newSelect}))
-//   }
-    const handleCreateHabit=async(e)=>{
-    e.preventDefault()
-    const response =await Edit_Habit({variables:{
-      input:{
-        id:editId,
-        title:formData.title,
-        category:formData.category,
-        frequency:formData.frequency,
-        selectedDays:formData.selectDay
-      }
-    }})
-}
-if(loading) return <h2>Loading...</h2> 
+  const handleCreateHabit = async (e) => {
+    e.preventDefault();
+    const response = await Edit_Habit({
+      variables: {
+        input: {
+          id: editId,
+          title: formData.title,
+          category: formData.category,
+          frequency: formData.frequency,
+          selectedDays: formData.selectDay,
+        },
+      },
+    });
+  if(response){
+    notify('Updated habit succesfully')
+    setTimeout(()=>{
+      navigate(`/habit?habitId=${editId}`)
+    },3000)
+  }
+  };
+  if (loading) return <h2>Loading...</h2>;
+  useEffect(() => {
+    if (!user && userLoading === false) {
+      navigate("/login");
+    }
+  }, [user, navigate, userLoading]);
   return (
-         <div className="container mx-auto py-[3rem]">
+    <div className="container mx-auto py-[3rem]">
+      <ToastContainer />
       <h2 className="text-2xl text-base-100">Update Your Habit</h2>
       <form
         action=""
@@ -86,7 +94,9 @@ if(loading) return <h2>Loading...</h2>
           name=""
           id=""
           value={formData.title}
-          onChange={(e)=>setFormData((prev)=>({...prev,title:e.target.value}))}
+          onChange={(e) =>
+            setFormData((prev) => ({ ...prev, title: e.target.value }))
+          }
           placeholder="enter title..."
           className="px-2 bg-transparent border-1 rounded py-1"
         />
@@ -97,8 +107,10 @@ if(loading) return <h2>Loading...</h2>
           type="text"
           name=""
           id=""
-           value={formData.category}
-          onChange={(e)=>setFormData((prev)=>({...prev,category:e.target.value}))}
+          value={formData.category}
+          onChange={(e) =>
+            setFormData((prev) => ({ ...prev, category: e.target.value }))
+          }
           placeholder="enter Category..."
           className="px-2 bg-transparent border-1 rounded py-1"
         />
@@ -112,8 +124,12 @@ if(loading) return <h2>Loading...</h2>
               id=""
               className="bg-fuchsia-300 px-2 rounded"
               value={formData.frequency}
-              defaultValue={(e)=>setFormData(prev)({...prev,frequency:"Daily"})}
-              onChange={(e)=>setFormData((prev)=>({...prev,frequency:e.target.value}))}
+              defaultValue={(e) =>
+                setFormData(prev)({ ...prev, frequency: "Daily" })
+              }
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, frequency: e.target.value }))
+              }
             >
               <option value="Daily">Daily</option>
               <option value="Weekly">Weekly</option>
@@ -125,9 +141,9 @@ if(loading) return <h2>Loading...</h2>
               Select Day
             </label>
             <button
-              className="bg-fuchsia-300 px-2 rounded cursor-pointer dropdown" 
+              className="bg-fuchsia-300 px-2 rounded cursor-pointer dropdown"
               onClick={handleDropdown}
-              disabled={formData.frequency=="Daily"}
+              disabled={formData.frequency == "Daily"}
             >
               Select--
             </button>
@@ -138,25 +154,37 @@ if(loading) return <h2>Loading...</h2>
               ref={dropdown}
             >
               <ul>
-                {['Sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'].map((day) => (
-                <li className="flex gap-5 py-1 hover:bg-fuchsia-300 px-3">
-                  <input type="checkbox" name="" id="" value={day}
-                  checked={formData.selectDay.includes(day)}
-                  onChange={() => handleCheckboxChange(day)}/>
-                  <label htmlFor="">{day}</label>
-                </li>
-               
+                {[
+                  "Sunday",
+                  "monday",
+                  "tuesday",
+                  "wednesday",
+                  "thursday",
+                  "friday",
+                  "saturday",
+                ].map((day) => (
+                  <li className="flex gap-5 py-1 hover:bg-fuchsia-300 px-3">
+                    <input
+                      type="checkbox"
+                      name=""
+                      id=""
+                      value={day}
+                      checked={formData.selectDay.includes(day)}
+                      onChange={() => handleCheckboxChange(day)}
+                    />
+                    <label htmlFor="">{day}</label>
+                  </li>
                 ))}
               </ul>
             </div>
           </div>
         </div>
         <button className="bg-black hover:bg-gray-900 cursor-pointer py-1 text-base-100 rounded">
-          Create Habit
+          Update Habit
         </button>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default EditHabit
+export default EditHabit;
