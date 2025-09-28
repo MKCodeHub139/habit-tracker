@@ -1,16 +1,19 @@
 import express from 'express';
+import 'dotenv/config'
 import cors from 'cors'
 import { ApolloServer } from '@apollo/server';
 import  {expressMiddleware} from '@apollo/server/express4'
 import typeDefs from './services/graphql/typeDefs.js';
 import resolvers from './services/graphql/resolvers.js';
 import cookieParser from 'cookie-parser';
-import mongoDbConnect from './conf/conn.js';
 import { validateUser } from './services/jwt/auth.js';
+import mongoose from 'mongoose';
 
 const app =express()
 const port =process.env.PORT || 8000
-mongoDbConnect(process.env.MONGODB)
+mongoose.connect(process.env.MONGO_URL)
+  .then(() => console.log('MongoDB connected successfully'))
+  .catch(err => console.error('MongoDB connection error:', err));
 app.use(cors({
   origin: "http://localhost:5173", // frontend ka origin
   credentials: true
