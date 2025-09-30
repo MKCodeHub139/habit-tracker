@@ -4,9 +4,9 @@ import { GrFormView, MdDelete } from "../../icons/icons";
 
 const Daily = ({ habit, today, handleDelete, handleComplete }) => {
   return (
-    <div className="habit-card w-1/3 bg-fuchsia-400 text-white min-h-[10rem] rounded shadow-xl p-3 grow">
+    <div className="habit-card w-1/3 bg-[#FFFFFF] border-2 border-[#E0E0E0] text-[#212121] min-h-[10rem] rounded-xl shadow-xl p-3 grow">
       <div className="title flex justify-between items-center w-[70%]">
-        <h5 className="text-[1.2rem] font-bold">{habit.title}</h5>
+        <h5 className="text-[1.2rem] font-bold text-[#333333]">{habit.title}</h5>
         <div className="achive-check flex flex-col items-center">
           <label htmlFor="">Acheive</label>
           <input
@@ -22,7 +22,7 @@ const Daily = ({ habit, today, handleDelete, handleComplete }) => {
           />
         </div>
       </div>
-      <p className="text-[18px] text-base-100">category - {habit.category}</p>
+      <p className="text-[18px]">category - {habit.category}</p>
       <div className="frequency">
         <p>Frequency - {habit.frequency}</p>
       </div>
@@ -35,12 +35,12 @@ const Daily = ({ habit, today, handleDelete, handleComplete }) => {
       <div className="action-btns flex gap-9 items-center mt-4 ">
         <Link
           to={`/habit?habitId=${habit.id}`}
-          className="bg-base-200 text-black hover:bg-base-300 px-5 cursor-pointer rounded flex items-center"
+          className="bg-[#FF5722] text-[#FFFFFF] hover:bg-[#E64A19] border-2 border-[#FFB74D] px-5 cursor-pointer rounded flex items-center"
         >
           <GrFormView /> View
         </Link>
         <button
-          className=" hover:bg-base-400 px-5 cursor-pointer rounded flex items-center bg-red-500 text-base-100 hover:bg-red-400"
+          className="px-5 cursor-pointer rounded flex items-center bg-red-500 text-base-100 hover:bg-red-400"
           onClick={(e) => handleDelete(e, habit.id)}
         >
           <MdDelete />

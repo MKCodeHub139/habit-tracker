@@ -4,6 +4,7 @@ import viteLogo from '/vite.svg'
 import './App.css'
 import { Outlet } from 'react-router-dom'
 import Nav from './components/Header/Nav'
+import Footer from './components/Footer/Footer'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -11,9 +12,10 @@ function App() {
 
   return (
     <>
-    <div className="main bg-fuchsia-500 min-h-screen">
+    <div className="main bg-[#FFFFFF] text-[#212121] min-h-screen">
     <Nav/>
       <Outlet/>
+    <Footer/>
     </div>
     </>
   )

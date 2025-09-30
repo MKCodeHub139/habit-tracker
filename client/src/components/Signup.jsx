@@ -18,7 +18,7 @@ const Signup = () => {
   }
   return (
     <div className="w-full flex justify-center container mx-auto py-9">
-      <form action="" onSubmit={handleCreateUser} className="flex flex-col w-1/3 gap-4 shadow-2xl my-9 p-5">
+      <form action="" onSubmit={handleCreateUser} className="flex flex-col md:w-1/3 gap-4 shadow-2xl my-9 p-5">
         <h2 className="text-2xl font-[600]">SignUp</h2>
         <label htmlFor="">Name</label>
         <input
@@ -49,11 +49,11 @@ const Signup = () => {
         />
         <button
           type="submit"
-          className="cursor-pointer bg-fuchsia-300 py-1 rounded hover:bg-fuchsia-200"
+          className="cursor-pointer bg-[#4CAF50] py-1 rounded hover:bg-[#43A047] text-[#FFFFFF]"
         >
           SignUp
         </button>
-        <p>Already have an account <Link to="/login" className="text-pink-900 underline">Login</Link> </p>
+        <p>Already have an account <Link to="/login" className="text-[#FF5722] underline">Login</Link> </p>
       </form>
     </div>
   );

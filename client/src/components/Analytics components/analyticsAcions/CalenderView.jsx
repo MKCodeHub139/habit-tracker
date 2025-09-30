@@ -12,7 +12,7 @@ const CalenderView = () => {
             });
             console.log(completedDates)
   return (
-    <div className="main bg-fuchsia-100 p-5 rounded-2xl min-h-screen">
+    <div className="main bg-[#FFFFFF] shadow-xl p-5 rounded-2xl min-h-screen">
       <div className="head">
         <div className="head pb-5">
           <h2 className="text-2xl">Habit Completion Calendar</h2>

@@ -10,7 +10,7 @@ const HeaderCard = ({
     diff
 }) => {
   return (
-     <div className="overallCompletion-card border-2 hover:border-fuchsia-600 shadow-xl cursor-pointer  border-fuchsia-400 p-3 rounded-2xl my-5 min-w-1/5  grow min-h-[150px] text-white">
+     <div className="overallCompletion-card border-2  shadow-xl cursor-pointer  border-[#FF5722] hover:border-[#FFC107] p-3 rounded-2xl my-5 min-w-1/5  grow min-h-[150px]">
                     <div className="head flex justify-between items-center h-[30px] mb-5">
                       <div className="title ">
                      <p className="">{title}</p>

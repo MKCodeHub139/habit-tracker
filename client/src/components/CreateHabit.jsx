@@ -68,11 +68,11 @@ useEffect(()=>{
   return (
     <div className="container mx-auto py-[3rem]">
       <ToastContainer />
-      <h2 className="text-2xl text-base-100">Make Your Habit</h2>
+      <h2 className="text-2xl text-[#212121]">Make Your Habit</h2>
       <form
         action=""
         onSubmit={handleCreateHabit}
-        className="flex flex-col gap-4 bg-fuchsia-400 my-9 lg:w-1/2 p-9 shadow-2xl rounded-xl"
+        className="flex flex-col gap-4 bg-[#F5F5F5] my-9 lg:w-1/2 p-9 shadow-2xl rounded-xl text-[#212121]"
       >
         <label htmlFor="" className="">
           Title
@@ -106,7 +106,7 @@ useEffect(()=>{
             <select
               name=""
               id=""
-              className="bg-fuchsia-300 px-2 rounded"
+              className="bg-[#FFFFFF] border-2 border-[#E0E0E0] px-2 rounded"
               value={formData.frequency}
               defaultValue={(e)=>setFormaData(prev)({...prev,frequency:"Daily"})}
               onChange={(e)=>setFormaData((prev)=>({...prev,frequency:e.target.value}))}
@@ -121,7 +121,7 @@ useEffect(()=>{
               Select Day
             </label>
             <button
-              className="bg-fuchsia-300 px-2 rounded cursor-pointer dropdown" 
+              className="bg-[#FFFFFF] border-2 border-[#E0E0E0] px-2 rounded cursor-pointer dropdown" 
               onClick={handleDropdown}
               disabled={formData.frequency=="Daily"}
             >
@@ -135,7 +135,7 @@ useEffect(()=>{
             >
               <ul onChange={handleDropdownCheck}>
                 {['Sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'].map((day) => (
-                <li className="flex gap-5 py-1 hover:bg-fuchsia-300 px-3" key={day}>
+                <li className="flex gap-5 py-1 hover:bg-[#D5D5D5] px-3" key={day}>
                   <input type="checkbox" name="" id="" value={day} 
                   />
                   <label htmlFor="">{day}</label>
@@ -145,7 +145,7 @@ useEffect(()=>{
             </div>
           </div>
         </div>
-        <button className="bg-black hover:bg-gray-900 cursor-pointer py-1 text-base-100 rounded">
+        <button className="bg-[#4CAF50] hover:bg-[#43A047] cursor-pointer py-1 text-base-100 rounded">
           Create Habit
         </button>
       </form>

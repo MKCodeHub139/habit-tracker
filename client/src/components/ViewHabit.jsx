@@ -57,11 +57,11 @@ const ViewHabit = () => {
   return (
     <div className="min-h-screen py-[4rem]">
       <div className="container mx-auto">
-        <h2 className="text-3xl text-base-100">Habit Page</h2>
+        <h2 className="text-3xl text-[#333333]">Habit Page</h2>
         <hr className="mt-5 text-white" />
-        <div className="view-card min-h-[70vh] min-w-[90vw] bg-fuchsia-400 mt-9 rounded p-5">
+        <div className="view-card min-h-[70vh] min-w-[90vw] bg-[#FFF3E0 border-2 text-[#333333] border-[#E0E0E0] shadow-xl mt-9 rounded p-5">
           <div className="habit-head flex justify-between items-center">
-            <h2 className="text-2xl text-base-100">{data?.getHabit?.title}</h2>
+            <h2 className="text-2xl text-[#333333]">{data?.getHabit?.title}</h2>
             <div className="actions flex gap-5 items-center">
               <div className="complete flex flex-col items-center">
                 <label htmlFor="">Achieve</label>
@@ -83,31 +83,31 @@ const ViewHabit = () => {
               </div>
               <Link
                 to={`/edit-habit?habitId=${data?.getHabit?.id}`}
-                className="bg-fuchsia-700 hover:bg-fuchsia-500 cursor-pointer px-5 rounded text-white flex items-center h-7 gap-2"
+                className="bg-[#FF5722] text-[#FFFFFF] hover:bg-[#E64A19] cursor-pointer px-5 rounded  flex items-center h-7 gap-2"
               >
                 <FaEdit /> Edit
               </Link>
               <button
-                className="bg-pink-500 hover:bg-pink-400 cursor-pointer px-5 rounded text-white h-7 flex items-center gap-2"
+                className="bg-red-400 hover:bg-red-500 text-[#FFFFFF] cursor-pointer px-5 rounded  h-7 flex items-center gap-2"
                 onClick={handleDelete}
               >
                 <MdDelete /> Delete
               </button>
             </div>
           </div>
-          <div className="details  text-white flex mt-5 flex-col gap-3">
+          <div className="details flex mt-5 flex-col gap-3">
             <p className="flex">
               <span className="font-[600] flex items-center gap-2">
                 <BiCategory />
                 Category :{" "}
               </span>
-              <span className="bg-fuchsia-300 px-3 rounded-2xl py-[2px] text-black mx-3">
+              <span className="bg-[#FFC107] px-3 rounded-2xl py-[2px] text-black mx-3">
                 {data?.getHabit?.category}
               </span>
             </p>
             <p>
               <span className="font-[600]">Frequency :</span>{" "}
-              <span className="bg-fuchsia-300 px-3 rounded-2xl py-[2px] text-black mx-3">
+              <span className="bg-[#FFC107] px-3 rounded-2xl py-[2px] mx-3">
                 {data?.getHabit?.frequency}
               </span>
             </p>
@@ -116,30 +116,30 @@ const ViewHabit = () => {
                 <FaCalendarDays />
                 Selected Days :
               </span>{" "}
-              <span className="bg-fuchsia-300 px-3 rounded-2xl py-[2px] text-black mx-3">
+              <span className="bg-[#FFC107] px-3 rounded-2xl py-[2px] mx-3">
                 {data?.getHabit?.selectedDays?.join(" , ")}
               </span>
             </p>
             <p>
               <span className="font-[600]">Current Streak 🔥 : </span>{" "}
-              <span className="bg-fuchsia-300 px-3 rounded-2xl py-[2px] text-black mx-3">
+              <span className="bg-[#FFC107] px-3 rounded-2xl py-[2px] mx-3">
                 {data?.getHabit?.streak} days
               </span>{" "}
             </p>
             <p>
               <span className="font-[600]">Longest Streak 🔥 : </span>{" "}
-              <span className="bg-fuchsia-300 px-3 rounded-2xl py-[2px] text-black mx-3">
+              <span className="bg-[#FFC107] px-3 rounded-2xl py-[2px] mx-3">
                 {data?.getHabit?.longestStreak} days
               </span>{" "}
             </p>
           </div>
-          <div className="progres-bar mt-5 flex items-center gap-3 text-white h-[5rem]">
+          <div className="progres-bar mt-5 flex items-center gap-3 h-[5rem]">
             <label htmlFor=""> Progress Bar</label>
             <input
               type="range"
               name=""
               id=""
-              className="w-1/2 text-fuchsia-600 appearance-none background: transparent cursor: pointer bg-fuchsia-950 rounded-2xl "
+              className="w-1/2  appearance-none background-transparent cursor-pointer bg-[#8BC34A] rounded-2xl "
               min={0}
               max={30}
               value={completedDates}

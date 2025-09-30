@@ -14,6 +14,9 @@ import useGetUser from "../hooks/analytics/headerCards/useGetUser";
 import { MdOutlineAnalytics } from "react-icons/md";
 import { FaCalendarWeek } from "react-icons/fa";
 
+// 1. Calm & Minimal Palette (Focus & Simplicity) Background: #F5F5F5 (light grey) Primary: #4CAF50 (green, success / completion) Secondary: #FFC107 (amber, highlights / progress) Text: #212121 (dark grey) Accent: #03A9F4 (light blue, subtle notifications)
+
+
 const Home = () => {
   const { user, loading, error } = useGetUser();
   const todayDay = new Date()
@@ -123,14 +126,14 @@ const Home = () => {
       <div className="container mx-auto ">
         <div className="frequency-div flex gap-[4rem]">
           <button
-            className="cursor-pointer bg-fuchsia-400 text-base-100 hover:bg-fuchsia-300 py-1 px-5 rounded flex items-center gap-2"
+            className={`cursor-pointer ${activeHabit==="Daily" ?'bg-[#4CAF50] hover:bg-[#439b46]':'bg-[#03A9F4] hover:bg-[#0288D1]'} text-[#FFFFFF]  py-1 px-5 rounded flex items-center gap-2`}
             onClick={() => setActiveHabit("Daily")}
           >
             <IoIosToday />
             Today
           </button>
           <button
-            className="cursor-pointer bg-fuchsia-400 text-base-100 hover:bg-fuchsia-300 py-1 px-5 rounded flex items-center gap-2"
+            className={`cursor-pointer ${activeHabit==="Weekly" ?'bg-[#4CAF50] hover:bg-[#439b46]':'bg-[#03A9F4] hover:bg-[#0288D1]'} text-[#FFFFFF]  py-1 px-5 rounded flex items-center gap-2`}
             onClick={() => setActiveHabit("Weekly")}
           >
             <FaCalendarWeek />
@@ -138,7 +141,7 @@ const Home = () => {
           </button>
           <Link
             to="/analytics"
-            className="cursor-pointer bg-fuchsia-400 text-base-100 hover:bg-fuchsia-300 py-1 px-5 rounded flex items-center gap-2"
+            className="cursor-pointer bg-[#03A9F4] text-[#FFFFFF] hover:bg-[#0288D1] py-1 px-5 rounded flex items-center gap-2"
           >
             <MdOutlineAnalytics /> OverAll
           </Link>
@@ -156,14 +159,14 @@ const Home = () => {
                 />
               ))
             ) : (
-              <div className="text-xl text-base-100 text-center">
+              <div className="text-xl text-[#212121] text-center">
                 No Daily habits
               </div>
             )
           ) : null}
           {activeHabit === "Weekly" ? (
-            dailyHabits?.length > 0 ? (
-              dailyHabits?.map((habit) => (
+            weeklyHabits?.length > 0 ? (
+              weeklyHabits?.map((habit) => (
                 <Weekly
                   key={habit.id}
                   habit={habit}
@@ -173,7 +176,7 @@ const Home = () => {
                 />
               ))
             ) : (
-              <div className="text-xl text-base-100 text-center">
+              <div className="text-xl text-[#212121] text-center">
                 No weekly habits
               </div>
             )

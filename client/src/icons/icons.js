@@ -11,4 +11,5 @@ import { FaFire } from "react-icons/fa";
 import { GoGoal } from "react-icons/go";
 import { SlCalender } from "react-icons/sl";
 import { FaUserCircle } from "react-icons/fa";
-export {GrFormView,MdDelete,MdOutlineAnalytics,FaEdit,BiCategory,FaCalendarDays,IoIosToday,FaCalendarWeek,IoAnalytics,FaFire,GoGoal,SlCalender,FaUserCircle}
+import { CiHeart } from "react-icons/ci";
+export {GrFormView,MdDelete,MdOutlineAnalytics,FaEdit,BiCategory,FaCalendarDays,IoIosToday,FaCalendarWeek,IoAnalytics,FaFire,GoGoal,SlCalender,FaUserCircle,CiHeart}

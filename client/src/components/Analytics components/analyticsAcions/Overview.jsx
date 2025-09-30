@@ -58,7 +58,7 @@ Object?.entries(count)?.map(([day,times])=>{
   return (
     <div className="main w-full min-h-screen flex gap-3 flex-wrap justify-center ">
 
-    <div className='md:w-[45%] w-full h-screen rounded-2xl bg-fuchsia-300 p-5 overflow-hidden grow'>
+    <div className='md:w-[45%] w-full h-screen rounded-2xl bg-[#F5F5F5] p-5 overflow-hidden grow'>
       <div className="head pb-5">
       <h2 className='text-2xl'>Weekly Progress</h2>
       <p>Habbit completion this week </p>
@@ -82,11 +82,11 @@ Object?.entries(count)?.map(([day,times])=>{
           <Tooltip />
           <Legend />
           <CartesianGrid strokeDasharray="3 3"/>
-          <Bar dataKey="completedHabit" background={{ }} className='fill-fuchsia-600'/>
+          <Bar dataKey="completedHabit" background={{ }} className='fill-[#FF5722]'/>
         </BarChart>
       </ResponsiveContainer>
       </div>
-      <div className="md:w-[45%]  w-full h-screen bg-fuchsia-300 rounded-2xl p-5">
+      <div className="md:w-[45%]  w-full h-screen bg-[#F5F5F5] rounded-2xl p-5">
           <div className="head pb-5">
       <h2 className='text-2xl'>Habit Categories</h2>
       <p>Distribution of your habits by category </p>

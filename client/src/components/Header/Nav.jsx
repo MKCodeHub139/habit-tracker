@@ -4,7 +4,7 @@ import useGetUser from "../../hooks/analytics/headerCards/useGetUser";
 import { IoIosAdd } from "react-icons/io";
 import { FaUserCircle } from "react-icons/fa";
 import { LogoutUser } from "../../graphql/mutations";
-
+import logo from '../../assets/habitbridge-logo-white.svg';
 const Nav = () => {
   const handleLogout = async () => {
     const res = await Logout_User({ variables: { id: user?.getUser?.id } });
@@ -17,11 +17,11 @@ const Nav = () => {
   const [Logout_User] = useMutation(LogoutUser);
   const navigate = useNavigate();
   return (
-    <div className="main text-base-100 sticky top-0 h-[3rem] flex items-center z-40">
-      <nav className="flex justify-evenly items-center container mx-auto  bg-fuchsia-400 rounded-2xl mt-2 p-1">
+    <div className="main text-[#FFFFFF] sticky top-0 h-[3rem] flex items-center z-40">
+      <nav className="flex justify-evenly items-center container mx-auto  bg-[#FF5722] rounded-2xl mt-2 p-1">
         <div className="logo">
-          <h1 className="text-2xl">
-            <Link>Habit</Link>
+          <h1 className="text-2xl h-[2.6rem] flex items-center">
+            <Link><img src={logo} alt="logo" className="h-[3.7rem]"/></Link>
           </h1>
         </div>
         <ul>
@@ -32,9 +32,9 @@ const Nav = () => {
                 className={({ isActive }) =>
                   `${
                     isActive
-                      ? "bg-fuchsia-100 text-black border-fuchsia-100 hover:bg-fuchsia-200"
+                      ? "bg-[#FFC107]  border-[#F9AFAF] hover:bg-[#f1b707]"
                       : ""
-                  } text-4xl cursor-pointer border-1 hover:bg-fuchsia-100 hover:text-black hover:border-fuchsia-100 rounded-full px-3`
+                  } text-4xl cursor-pointer border-2 hover:bg-[#FFC107]  hover:border-[#F9AFAF] rounded-full px-3`
                 }
               >
                 <IoIosAdd />
@@ -46,7 +46,7 @@ const Nav = () => {
               </p>
 
               <button
-                className="cursor-pointer border-1 hover:bg-red-400 hover:border-fuchsia-100 rounded-full py-1 px-3"
+                className="cursor-pointer border-2 bg-orange-600 hover:bg-orange-700 hover:border-fuchsia-100 rounded-full py-1 px-3"
                 onClick={handleLogout}
               >
                 Logout
@@ -60,9 +60,9 @@ const Nav = () => {
                   className={({ isActive }) =>
                     `${
                       isActive
-                        ? "bg-fuchsia-100 text-black border-fuchsia-100"
+                        ? "bg-[#FFC107]  border-0"
                         : ""
-                    } cursor-pointer border-1 hover:bg-fuchsia-100 hover:text-black hover:border-0 rounded-full py-1 px-3`
+                    } cursor-pointer border-2 hover:bg-[#f1b707]  hover:border-0 rounded-full py-1 px-3`
                   }
                 >
                   Signup
@@ -72,9 +72,9 @@ const Nav = () => {
                   className={({ isActive }) =>
                     `${
                       isActive
-                        ? "bg-fuchsia-100 text-black border-fuchsia-100"
+                        ? "bg-[#FFC107]  border-fuchsia-100"
                         : ""
-                    } cursor-pointer border-1 hover:bg-fuchsia-100 hover:text-black hover:border-0 rounded-full py-1 px-3`
+                    } cursor-pointer border-2 hover:bg-[#f1b707]  hover:border-0 rounded-full py-1 px-3`
                   }
                 >
                   Login

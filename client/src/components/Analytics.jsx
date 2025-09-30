@@ -93,8 +93,8 @@ useEffect(()=>{
   return (
     <div className="min-h-screen py-[3rem]">
       <div className="container mx-auto ">
-        <h2 className="text-3xl text-base-100">Analytics Page</h2>
-        <hr className="mt-5 text-white" />
+        <h2 className="text-3xl ">Analytics Page</h2>
+        <hr className="mt-5 " />
         <div className="header">
           <div className="header-cards w-full flex flex-wrap gap-3">
             <HeaderCard
@@ -120,14 +120,14 @@ useEffect(()=>{
             />
           </div>
         </div>
-        <div className="habit-actions md:w-2/3 lg:w-2/5 sm:w-2/3 bg-fuchsia-400 h-8 rounded-full flex justify-around items-center text-white my-5">
-          <button onClick={(e)=>setActiveAction('overview')} className={`${activeAction==="overview"?"bg-fuchsia-600 hover:bg-fuchsia-500":"hover:bg-fuchsia-300"} px-2 rounded-full  cursor-pointer`}>
+        <div className="habit-actions md:w-2/3 lg:w-2/5 sm:w-2/3 bg-[#EEEEEE] text-[#212121] h-8 rounded-full flex justify-around items-center  my-5  shadow-2xl">
+          <button onClick={(e)=>setActiveAction('overview')} className={`${activeAction==="overview"?"bg-[#FF5722] hover:bg-[#E64A19] text-[#FFFFFF]":"hover:bg-[#FF7043] hover:text-[#FFFFFF]"} px-2 rounded-full  cursor-pointer `}>
             Overview
           </button>
-          <button onClick={(e)=>setActiveAction('habit-performance')} className= {`${activeAction==="habit-performance"?"bg-fuchsia-600 hover:bg-fuchsia-500":"hover:bg-fuchsia-300"}  px-2 rounded-full  cursor-pointer`}>
+          <button onClick={(e)=>setActiveAction('habit-performance')} className= {`${activeAction==="habit-performance"?"bg-[#FF5722] hover:bg-[#E64A19] text-[#FFFFFF]":"hover:hover:bg-[#FF7043] hover:text-[#FFFFFF]"}  px-2 rounded-full  cursor-pointer`}>
             Habit Performance
             </button>
-          <button onClick={(e)=>setActiveAction('calender-view')} className= {`${activeAction==="calender-view"?"bg-fuchsia-600 hover:bg-fuchsia-500":"hover:bg-fuchsia-300"} px-2 rounded-full  cursor-pointer`}>
+          <button onClick={(e)=>setActiveAction('calender-view')} className= {`${activeAction==="calender-view"?"bg-[#FF5722] hover:bg-[#E64A19] text-[#FFFFFF]":"hover:bg-[#FF7043] hover:text-[#FFFFFF]"} px-2 rounded-full  cursor-pointer`}>
             Calender View
           </button>
           {/* <button onClick={(e)=>setActiveAction('insights')} className={`${activeAction==="insights"?"bg-fuchsia-600 hover:bg-fuchsia-500":"hover:bg-fuchsia-300"} px-2 rounded-full  cursor-pointer`}>
