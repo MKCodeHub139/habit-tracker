@@ -53,6 +53,7 @@ const resolvers ={
                  res.clearCookie('token')
                  return true
             }
+            return false
         },
         createHabit:async(parent,args,context)=>{
             const {user} =context

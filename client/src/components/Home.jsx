@@ -112,19 +112,11 @@ const Home = () => {
       navigate("/login");
     }
   }, [user, navigate, loading]);
-  useEffect(() => {
-    if (habits?.getHabits?.length === 0)
-      return (
-        <div className="w-full h-screen p-5 text-xl text-white text-center ">
-          No habits found!
-        </div>
-      );
-  }, [habits]);
   if (isLoading) return <h1>Loading</h1>;
   return (
     <div className="min-h-screen py-[4rem]">
       <div className="container mx-auto ">
-        <div className="frequency-div flex gap-[4rem]">
+        <div className="frequency-div flex gap-[3rem] flex-wrap">
           <button
             className={`cursor-pointer ${activeHabit==="Daily" ?'bg-[#4CAF50] hover:bg-[#439b46]':'bg-[#03A9F4] hover:bg-[#0288D1]'} text-[#FFFFFF]  py-1 px-5 rounded flex items-center gap-2`}
             onClick={() => setActiveHabit("Daily")}
@@ -147,7 +139,7 @@ const Home = () => {
           </Link>
         </div>
         <div className="habits flex flex-wrap gap-5 my-11">
-          {activeHabit === "Daily" ? (
+         {activeHabit === "Daily" ? (
             dailyHabits?.length > 0 ? (
               dailyHabits?.map((habit) => (
                 <Daily

@@ -47,6 +47,7 @@ const handleCreateHabit=async(e)=>{
       }})
       if(response){
         notify('habit created successfully')
+        setTimeout(()=>navigate('/'),3000)
         setFormaData({
     title:'',
     category:'',
@@ -130,7 +131,7 @@ useEffect(()=>{
             <div
               className={`dropown-content ${
                 !selectDayDropdown && "invisible"
-              } absolute  bg-base-100 right-0 top-[30px] w-[15vw] h-[30vh] overflow-auto`}
+              } absolute  bg-base-100 right-0 top-[30px] md:w-[15vw] h-[30vh] overflow-auto`}
               ref={dropdown}
             >
               <ul onChange={handleDropdownCheck}>

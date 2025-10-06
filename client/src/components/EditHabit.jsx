@@ -150,7 +150,7 @@ const EditHabit = () => {
             <div
               className={`dropown-content ${
                 !selectDayDropdown && "invisible"
-              } absolute  bg-[#FFFFFF] right-0 top-[30px] w-[15vw] h-[30vh] overflow-auto`}
+              } absolute  bg-[#FFFFFF] right-0 top-[30px] md:w-[15vw] h-[30vh] overflow-auto`}
               ref={dropdown}
             >
               <ul>

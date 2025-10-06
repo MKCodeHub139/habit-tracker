@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 const Daily = ({habit,today,handleDelete,handleComplete}) => {
   
   return (
-         <div className="habit-card w-1/3 bg-[#FFFFFF] border-2 border-[#E0E0E0] text-[#212121] min-h-[10rem] rounded-xl shadow-xl p-3 grow">
+         <div className="habit-card md:w-1/3 bg-[#FFFFFF] border-2 border-[#E0E0E0] text-[#212121] min-h-[10rem] rounded-xl shadow-xl p-3 grow">
                   <div className="title flex justify-between items-center w-[70%]">
                     <h5 className="text-[1.2rem] font-bold text-[#333333]">{habit.title}</h5>
                     <div className="achive-check flex flex-col items-center">
